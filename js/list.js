@@ -447,7 +447,7 @@ _.mixin({
 					_.forEach(data, function (item, i) {
 						var name = _.stripTags(item.name).replace(/\s{2,}/g, " ");
 						this.data.push({name : name, date : (item.date_posted || item.date_reviewed || item.date_found || "").substring(0, 10), url : (item.url || "").replace(/\\/g, ""), width : _.textWidth(name, panel.fonts.title)});
-						this.data.push({name : _.stripTags(item.summary), date : "", url : "", width : 0});
+						this.data.push({name : _.stripTags(item.summary).replace(/\s{2,}/g, " "), date : "", url : "", width : 0});
 						this.data.push({name : "", date : "", url : "", width : 0});
 					}, this);
 					this.items = this.data.length;
