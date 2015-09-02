@@ -62,8 +62,6 @@ function on_mouse_lbtn_up(x, y) {
 }
 
 function on_mouse_rbtn_up(x, y) {
-	if (utils.IsKeyPressed(VK_SHIFT))
-		return false;
 	if (buttons.buttons.stop.trace(x, y)) {
 		var m = window.CreatePopupMenu();
 		m.AppendMenuItem(MF_STRING, 1, "Stop After Current");
@@ -76,8 +74,8 @@ function on_mouse_rbtn_up(x, y) {
 		else if (idx == 2)
 			window.ShowConfigure();
 		m.Dispose();
+		return true;
 	} else {
-		panel.rbtn_up(x, y);
+		return panel.rbtn_up(x, y);
 	}
-	return true;
 }
