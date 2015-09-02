@@ -116,11 +116,17 @@ _.mixin({
 				}
 				break;
 			case "user.getRecommendedArtists":
+				//needs testing
 				var data = _.jsonParse(this.xmlhttp.responsetext);
 				if (data.error) {
-					WshShell.popup(data.message, 0, panel.name, popup.stop);
+					panel.console(data.message);
 				} else {
-					_.save(this.xmlhttp.responsetext, folders.data + "lastfm\\" + this.username + ".user.getRecommendedArtists.json");
+					var temp = _.get(data, "recommendations.artist", []);
+					if (_.isUndefined(temp.length))
+						temp = [temp];
+					if (temp.length == 0)
+						return;
+					_.save(JSON.stringify(data), folders.data + "lastfm\\" + this.username + ".user.getRecommendedArtists.json");
 					window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
 					this.notify_data("2K3.NOTIFY.LASTFM", "update");
 				}

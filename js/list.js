@@ -694,7 +694,7 @@ _.mixin({
 			case this.mode == "lastfm_info" && this.lastfm_mode == 0: //artist stuff (especially similar) needs checking
 				if (data.error)
 					return panel.console(data.message);
-				var temp = _.jsonParse(this.xmlhttp.responsetext, this.lastfm_artist_methods[this.lastfm_artist_method].json);
+				var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
 				if (_.isUndefined(temp.length))
 					temp = [temp];
 				if (temp.length == 0)
