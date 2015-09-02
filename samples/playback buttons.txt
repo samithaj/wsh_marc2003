@@ -64,16 +64,20 @@ function on_mouse_lbtn_up(x, y) {
 function on_mouse_rbtn_up(x, y) {
 	if (utils.IsKeyPressed(VK_SHIFT))
 		return false;
-	var m = window.CreatePopupMenu();
-	m.AppendMenuItem(MF_STRING, 1, "Stop After Current");
-	m.CheckMenuItem(1, fb.StopAfterCurrent);
-	m.AppendMenuSeparator();
-	m.AppendMenuItem(MF_STRING, 2, "Configure...");
-	var idx = m.TrackPopupMenu(x, y);
-	if (idx == 1)
-		fb.StopAfterCurrent = !fb.StopAfterCurrent;
-	else if (idx == 2)
-		window.ShowConfigure();
-	m.Dispose();
+	if (buttons.buttons.stop.trace(x, y)) {
+		var m = window.CreatePopupMenu();
+		m.AppendMenuItem(MF_STRING, 1, "Stop After Current");
+		m.CheckMenuItem(1, fb.StopAfterCurrent);
+		m.AppendMenuSeparator();
+		m.AppendMenuItem(MF_STRING, 2, "Configure...");
+		var idx = m.TrackPopupMenu(x, y);
+		if (idx == 1)
+			fb.StopAfterCurrent = !fb.StopAfterCurrent;
+		else if (idx == 2)
+			window.ShowConfigure();
+		m.Dispose();
+	} else {
+		panel.rbtn_up(x, y);
+	}
 	return true;
 }
