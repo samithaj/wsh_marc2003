@@ -325,7 +325,7 @@ _.mixin({
 						}, this)
 						.value();
 					if (this.allmusic_url.length > 0) {
-						panel.console("A page was found for \"" + this.album + "\". Now checking for review...");
+						panel.console("A page was found for " + _.q(this.album) + ". Now checking for review...");
 						this.get();
 					} else {
 						panel.console("Could not match artist/album on the Allmusic website.");
