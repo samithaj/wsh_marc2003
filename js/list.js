@@ -691,23 +691,26 @@ _.mixin({
 				this.artist = "";
 				panel.item_focus_change();
 				break;
-			case this.mode == "lastfm_info" && this.lastfm_mode == 0: //artist stuff (especially similar) needs checking
+			case this.mode == "lastfm_info":
+				//response needs checking before saving. 
+				//we don't want to overwrite good cached data with nothing
 				if (data.error)
 					return panel.console(data.message);
-				var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
+				if (this.lastfm_mode == 0)
+					var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
+				else
+					var temp = _.get(data, this.lastfm_charts_methods[this.lastfm_charts_method].json, []);
 				if (_.isUndefined(temp.length))
 					temp = [temp];
 				if (temp.length == 0)
 					return;
 				_.save(JSON.stringify(data), f);
-				this.artist = "";
-				panel.item_focus_change();
-				break;
-			case this.mode == "lastfm_info":
-				if (data.error)
-					return panel.console(data.message);
-				_.save(JSON.stringify(data), f);
-				this.update();
+				if (this.lastfm_mode == 0) {
+					this.artist = "";
+					panel.item_focus_change();
+				} else {
+					this.update();
+				}
 				break;
 			}
 		}
