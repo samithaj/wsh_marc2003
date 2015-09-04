@@ -359,7 +359,7 @@ _.mixin({
 		return gdi.Font(name, size * 96 / 72, style);
 	},
 	open : function (file) {
-		return utils.ReadTextFile(file, utils.FileTest(file, "chardet"));
+		return utils.ReadTextFile(file);
 	},
 	save : function (value, file) {
 		try {
