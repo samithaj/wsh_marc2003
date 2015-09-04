@@ -61,7 +61,10 @@ _.mixin({
 					this.text_x = 0;
 					this.text_width = this.w;
 					for (var i = 0; i < Math.min(this.items, this.rows); i++) {
-						gr.GdiDrawText(this.data[i + this.offset].name, this.data[i + this.offset].width > 0 ? panel.fonts.title : panel.fonts.normal, panel.colours.text, this.x + this.text_x, this.y + 15 + (i * panel.row_height), this.text_width, panel.row_height, LEFT);
+						if (this.data[i + this.offset].width > 0)
+							gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.title, panel.colours.text, this.x, this.y + 15 + (i * panel.row_height), this.text_width, panel.row_height, LEFT);
+						else
+							gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.normal, panel.colours.text, this.x, this.y + 15 + (i * panel.row_height), this.text_width, panel.row_height, LEFT);
 					}
 					break;
 				}
@@ -692,8 +695,8 @@ _.mixin({
 				panel.item_focus_change();
 				break;
 			case this.mode == "lastfm_info":
-				//response needs checking before saving. 
-				//we don't want to overwrite good cached data with nothing
+				//response needs checking before saving.
+				//we don't want to overwrite good cached data with nothing.
 				if (data.error)
 					return panel.console(data.message);
 				if (this.lastfm_mode == 0)
