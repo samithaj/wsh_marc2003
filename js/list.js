@@ -742,7 +742,7 @@ _.mixin({
 					temp = [temp];
 				if (temp.length == 0)
 					return;
-				_.save(JSON.stringify(data), f);
+				_.save(JSON.stringify(data), f, -1);
 				if (this.lastfm_mode == 0) {
 					this.artist = "";
 					panel.item_focus_change();
