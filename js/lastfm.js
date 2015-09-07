@@ -126,7 +126,7 @@ _.mixin({
 						temp = [temp];
 					if (temp.length == 0)
 						return;
-					_.save(JSON.stringify(data), folders.data + "lastfm\\" + this.username + ".user.getRecommendedArtists.json");
+					_.save(JSON.stringify(data), folders.data + "lastfm\\" + this.username + ".user.getRecommendedArtists.json", -1);
 					window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
 					this.notify_data("2K3.NOTIFY.LASTFM", "update");
 				}
