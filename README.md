@@ -1,6 +1,6 @@
 # wsh_marc2003
 
-These are a bunch of scripts I've made for the **foobar2000** music player and **WSH panel mod** component.
+These are a bunch of scripts I've made for the [foobar2000](http://www.foobar2000.org/) music player and [WSH panel mod](https://code.google.com/p/foo-wsh-panel-mod/downloads/list) component.
 
 I've added a few [screenshots](https://github.com/19379/wsh_marc2003/wiki/Screenshots) to show some of the scripts that are available and the options they have. Browse the [samples](https://github.com/19379/wsh_marc2003/tree/master/samples) folder to see a list of them all.
 
