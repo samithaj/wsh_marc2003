@@ -618,15 +618,9 @@ _.mixin({
 				} else {
 					this.filename = panel.new_artist_folder(this.artist) + "musicbrainz.links." + this.mb_id + ".json";
 					if (_.isFile(this.filename)) {
-						var url = "https://musicbrainz.org/artist/" + this.mb_id;
-						var image = "musicbrainz";
-						this.data.push({
-							name : url,
-							url : url,
-							width : _.textWidth(url, panel.fonts.normal),
-							image : image
-						});
-						this.data.push.apply(this.data, _.map(_.jsonParse(_.open(this.filename), "relations"), this.mb_parse_urls));
+						var data = _.jsonParse(_.open(this.filename), "relations");
+						data.unshift({url : {resource : "https://musicbrainz.org/artist/" + this.mb_id }});
+						this.data = _.map(data, this.mb_parse_urls);
 						this.items = this.data.length;
 						if (_.fileExpired(this.filename, ONE_DAY))
 							this.get();
@@ -968,8 +962,8 @@ _.mixin({
 				break;
 			case "musicbrainz":
 				this.mb_parse_urls = _.bind(function (item) {
-					url = decodeURIComponent(item.url.resource);
-					image = "external";
+					var url = decodeURIComponent(item.url.resource);
+					var image = "external";
 					if (item.type == "official homepage") {
 						image = "home";
 					} else {
