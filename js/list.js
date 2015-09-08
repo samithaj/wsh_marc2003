@@ -900,7 +900,7 @@ _.mixin({
 				_.createFolder(folders.artists);
 				_.createFolder(folders.settings);
 				this.ua = lastfm.ua;
-				this.lastfm_mode = window.GetProperty("2K3.LIST.LASTFM.MODE", 0); //0 artist 1 charts 2 recommendations
+				this.lastfm_mode = window.GetProperty("2K3.LIST.LASTFM.MODE", 0); //0 artist 1 charts 2 recommendations 3 recent tracks
 				this.lastfm_artist_methods = [{
 						method : "artist.getSimilar",
 						json : "similarartists.artist",

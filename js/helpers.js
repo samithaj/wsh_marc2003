@@ -70,11 +70,11 @@ var guifx = {
 var popup = {
 	ok : 0,
 	yes_no : 4,
+	yes : 6,
+	no : 7,
 	stop : 16,
 	question : 32,
-	info : 64,
-	yes : 6,
-	no : 7
+	info : 64
 }
 
 var image = {
