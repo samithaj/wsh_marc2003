@@ -41,6 +41,7 @@ var vb = new ActiveXObject("ScriptControl");
 vb.Language = "VBScript";
 
 var drive = fb.ProfilePath.substring(0, 3);
+var git_exe = drive + "Applications\\GitPortable\\GitPortable.exe";
 var pe_exe = drive + "Applications\\ProcessExplorer\\procexp.exe";
 var np_exe = drive + "Applications\\Notepad++\\notepad++.exe";
 var ff_exe = WshShell.ExpandEnvironmentStrings("%USERPROFILE%") + "\\Documents\\FirefoxPortable\\FirefoxPortable.exe";
@@ -56,7 +57,7 @@ folders.settings = fb.ProfilePath + "wsh_settings\\";
 folders.data = fb.ProfilePath + "wsh_data\\";
 folders.artists = folders.data + "artists\\";
 folders.docs = fb.ComponentPath + "docs\\";
-folders.git = drive + "Applications\\GitPortable\\App\\Git\\";
+folders.git = drive + "Applications\\GitPortable\\Data\\Home\\";
 
 var guifx = {
 	font : "Guifx v2 Transports",
@@ -648,8 +649,9 @@ _.mixin({
 			m1.AppendMenuItem(MF_STRING, 51, "Process Explorer");
 			m1.AppendMenuSeparator();
 		}
-		if (_.isFolder(folders.git)) {
-			m1.AppendMenuItem(MF_STRING, 52, "Git Folder");
+		if (_.isFile(git_exe)) {
+			m1.AppendMenuItem(MF_STRING, 52, "GitPortable");
+			m1.AppendMenuItem(MF_STRING, 53, "Git Folder");
 			m1.AppendMenuSeparator();
 		}
 		m1.AppendMenuItem(MF_STRING, 70, "Configure...");
@@ -670,6 +672,9 @@ _.mixin({
 			_.run(pe_exe);
 			break;
 		case idx == 52:
+			_.run(git_exe);
+			break;
+		case idx == 53:
 			_.run(folders.git);
 			break;
 		case idx == 70:
