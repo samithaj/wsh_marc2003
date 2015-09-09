@@ -39,7 +39,7 @@ _.mixin({
 					this.text_x = this.spacer_w + 5;
 					this.text_width = _.round(this.w / 2) + 30;
 					var lastfm_charts_bar_x = this.x + this.text_x + this.text_width + 10;
-					var unit_width = (this.w - lastfm_charts_bar_x - 40) / this.data[0].playcount;
+					var unit_width = (this.w - lastfm_charts_bar_x - 40) / this.max_playcount;
 					var bar_colour = _.splitRGB(this.lastfm_charts_colour);
 					for (var i = 0; i < Math.min(this.items, this.rows); i++) {
 						var bar_width = _.ceil(unit_width * this.data[i + this.offset].playcount);
@@ -503,9 +503,6 @@ _.mixin({
 						var data = _.jsonParse(_.open(this.filename), this.lastfm_charts_methods[this.lastfm_charts_method].json);
 						if (_.isUndefined(data.length))
 							data = [data];
-						data = _.sortByOrder(data, function (item) {
-							return _.parseInt(item.playcount);
-						}, "desc");
 						for (var i = 0; i < data.length; i++) {
 							var name = this.lastfm_charts_method == 0 ? data[i].name : data[i].artist.name + " - " + data[i].name;
 							this.data[i] = {
@@ -516,6 +513,7 @@ _.mixin({
 								rank : i > 0 && data[i].playcount == data[i - 1].playcount ? this.data[i - 1].rank : i + 1
 							};
 						}
+						this.max_playcount = _.max(_.map(this.data, "playcount"));
 						this.items = this.data.length;
 						if (_.fileExpired(this.filename, ONE_DAY))
 							this.get();
