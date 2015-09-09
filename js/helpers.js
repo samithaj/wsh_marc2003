@@ -88,10 +88,10 @@ var image = {
 var ha_links = [
 	["Title Formatting Reference", "http://wiki.hydrogenaud.io/index.php?title=Foobar2000:Title_Formatting_Reference"],
 	["Query Syntax", "http://wiki.hydrogenaud.io/index.php?title=Foobar2000:Query_syntax"],
-	["Homepage", "http://www.foobar2000.org/"],
-	["Components", "http://www.foobar2000.org/components"],
+	["Homepage", "https://www.foobar2000.org/"],
+	["Components", "https://www.foobar2000.org/components"],
 	["Wiki", "http://wiki.hydrogenaud.io/index.php?title=Foobar2000:Foobar2000"],
-	["Forums", "http://www.hydrogenaud.io/forums/index.php?showforum=28"]
+	["Forums", "https://www.hydrogenaud.io/forums/index.php?showforum=28"]
 ];
 
 _.mixin({
