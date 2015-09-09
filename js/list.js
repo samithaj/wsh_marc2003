@@ -74,7 +74,7 @@ _.mixin({
 					for (var i = 0; i < Math.min(this.items, this.rows); i++) {
 						var y = this.y + 15 + (i * panel.row_height);
 						if (this.mb_icons)
-							_.drawImage(gr, this.mb_images[this.data[i + this.offset].image], this.x, y + _.round((panel.row_height - 16) / 2), 16, 16, image.centre);
+							_.drawImage(gr, this.mb_images[this.data[i + this.offset].image], this.x, y + _.round((panel.row_height - 16) / 2), 16, 16);
 						gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.normal, panel.colours.text, this.x + this.text_x, y, this.text_width, panel.row_height, LEFT);
 					}
 				}
