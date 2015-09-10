@@ -547,9 +547,9 @@ _.mixin({
 							}, this);
 							this.items = this.data.length;
 							if (_.fileExpired(this.filename, ONE_DAY))
-								lastfm.post("user.getRecommendedArtists");
+								this.post();
 						} else {
-							lastfm.post("user.getRecommendedArtists");
+							this.post();
 						}
 						break;
 					}
@@ -645,6 +645,33 @@ _.mixin({
 				break;
 			}
 			window.Repaint();
+		}
+		
+		this.post = function () {
+			var api_sig = md5("api_key" + lastfm.api_key + "limit250methoduser.getRecommendedArtistssk" + lastfm.sk + lastfm.secret);
+			var data = "format=json&limit=250&sk=" + "&method=user.getRecommendedArtists&api_key=" + lastfm.api_key + "&api_sig=" + api_sig;
+			this.xmlhttp.open("POST", "https://ws.audioscrobbler.com/2.0/", true);
+			this.xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			this.xmlhttp.setRequestHeader("User-Agent", this.ua);
+			this.xmlhttp.send(data);
+			this.xmlhttp.onreadystatechange = _.bind(function () {
+				if (this.xmlhttp.readyState == 4) {
+					var data = _.jsonParse(this.xmlhttp.responsetext);
+					if (data.error) {
+						panel.console(data.message);
+					} else {
+						//needs testing if last.fm ever fix this
+						var temp = _.get(data, "recommendations.artist", []);
+						if (_.isUndefined(temp.length))
+							temp = [temp];
+						if (temp.length == 0)
+							return;
+						_.save(JSON.stringify(data), this.filename, -1);
+						window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
+						this.notify_data("2K3.NOTIFY.LASTFM", "update");
+					}
+				}
+			}, this);
 		}
 		
 		this.get = function () {

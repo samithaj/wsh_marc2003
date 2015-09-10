@@ -2,27 +2,6 @@ _.mixin({
 	lastfm : function () {
 		this.notify_data = function (name, data) {
 			switch (name) {
-			case "2K3.NOTIFY.LOVE":
-				if (this.ps_obj) {
-					switch (true) {
-					case this.api_key.length != 32:
-						panel.console("Last.fm API KEY not set.");
-						break;
-					case this.secret.length != 32:
-						panel.console("Last.fm SECRET not set.");
-						break;
-					case this.username.length == 0:
-						panel.console("Last.fm Username not set.");
-						break;
-					case this.sk.length != 32:
-						panel.console("Last.fm Password not set.");
-						break;
-					default:
-						this.post(_.tf("%LASTFM_LOVED_DB%", data) == 1 ? "track.unlove" : "track.love", data);
-						break;
-					}
-				}
-				break;
 			case "2K3.NOTIFY.LASTFM":
 				this.username = this.read_ini("username");
 				this.sk = this.read_ini("sk");
@@ -42,96 +21,27 @@ _.mixin({
 			}
 		}
 		
-		this.post = function (method, metadb) {
-			switch (method) {
-			case "auth.getMobileSession":
-				var api_sig = md5("api_key" + this.api_key + "method" + method + "password" + this.password + "username" + this.username + this.secret);
-				var data = "format=json&password=" + this.password + "&username=" + this.username;
-				break;
-			case "track.love":
-			case "track.unlove":
-				var artist = _.tf("%artist%", metadb);
-				var track = _.tf("%title%", metadb);
-				if (!_.tagged(artist) || !_.tagged(track))
-					return;
-				panel.console("Attempting to " + (method == "track.love" ? "love " : "unlove ") + _.q(track) + " by " + _.q(artist));
-				panel.console("Contacting Last.fm....");
-				var api_sig = md5("api_key" + this.api_key + "artist" + artist + "method" + method + "sk" + this.sk + "track" + track + this.secret);
-				var data = "sk=" + this.sk + "&artist=" + encodeURIComponent(artist) + "&track=" + encodeURIComponent(track);
-				break;
-			case "user.getRecommendedArtists":
-				var api_sig = md5("api_key" + this.api_key + "limit250method" + method + "sk" + this.sk + this.secret);
-				var data = "format=json&limit=250&sk=" + this.sk;
-				break;
-			default:
-				return;
-			}
-			data += "&method=" + method + "&api_key=" + this.api_key + "&api_sig=" + api_sig;
+		this.auth = function () {
+			var api_sig = md5("api_key" + this.api_key + "methodauth.getMobileSessionpassword" + this.password + "username" + this.username + this.secret);
+			var data = "format=json&password=" + this.password + "&username=" + this.username + "&method=auth.getMobileSession&api_key=" + this.api_key + "&api_sig=" + api_sig;
 			this.xmlhttp.open("POST", "https://ws.audioscrobbler.com/2.0/", true);
 			this.xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			this.xmlhttp.setRequestHeader("User-Agent", this.ua);
 			this.xmlhttp.send(data);
 			this.xmlhttp.onreadystatechange = _.bind(function () {
 				if (this.xmlhttp.readyState == 4) {
-					//hack since new last.fm site went live
-					if (this.xmlhttp.status == 200 || method == "auth.getMobileSession") {
-						this.success(method, metadb);
-					} else {
-						panel.console("HTTP error: " + this.xmlhttp.status);
-						this.xmlhttp.responsetext && panel.console(this.xmlhttp.responsetext);
+					//don't check for http status 200 since new last.fm site went live
+					var data = _.jsonParse(this.xmlhttp.responsetext);
+					if (data.error) {
+						WshShell.popup(data.message, 0, panel.name, popup.stop);
+					} else if (data.session && data.session.key.length == 32) {
+						this.write_ini("sk", data.session.key);
+						window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
+						this.notify_data("2K3.NOTIFY.LASTFM", "update");
+						WshShell.popup("Your password was verified successfully. It will not be saved anywhere.", 0, panel.name, popup.info);
 					}
 				}
 			}, this);
-		}
-		
-		this.success = function (method, metadb) {
-			switch (method) {
-			case "auth.getMobileSession":
-				var data = _.jsonParse(this.xmlhttp.responsetext);
-				if (data.error) {
-					WshShell.popup(data.message, 0, panel.name, popup.stop);
-				} else if (data.session && data.session.key.length == 32) {
-					this.write_ini("sk", data.session.key);
-					window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
-					this.notify_data("2K3.NOTIFY.LASTFM", "update");
-					WshShell.popup("Your password was verified successfully. It will not be saved anywhere.", 0, panel.name, popup.info);
-				}
-				break;
-			case "track.love":
-			case "track.unlove":
-				/*re-instate this if Last.fm start returning JSON again
-				var data = _.jsonParse(this.xmlhttp.responsetext);
-				if (data.error) {
-					panel.console(data.message);
-				} else if (data.status == "ok") {
-					panel.console("Track " + (method == "track.love" ? "loved successfully." : "unloved successfully."));
-					fb.RunContextCommandWithMetadb("Customdb Love " + (method == "track.love" ? 1 : 0), metadb, 8);
-				}
-				*/
-				if (this.xmlhttp.responsetext.indexOf("ok") > -1) {
-					panel.console("Track " + (method == "track.love" ? "loved successfully." : "unloved successfully."));
-					fb.RunContextCommandWithMetadb("Customdb Love " + (method == "track.love" ? 1 : 0), metadb, 8);
-				} else {
-					panel.console(this.xmlhttp.responsetext);
-				}
-				break;
-			case "user.getRecommendedArtists":
-				//needs testing
-				var data = _.jsonParse(this.xmlhttp.responsetext);
-				if (data.error) {
-					panel.console(data.message);
-				} else {
-					var temp = _.get(data, "recommendations.artist", []);
-					if (_.isUndefined(temp.length))
-						temp = [temp];
-					if (temp.length == 0)
-						return;
-					_.save(JSON.stringify(data), folders.data + "lastfm\\" + this.username + ".user.getRecommendedArtists.json", -1);
-					window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
-					this.notify_data("2K3.NOTIFY.LASTFM", "update");
-				}
-				break;
-			}
 		}
 		
 		this.update_username = function () {
@@ -150,7 +60,7 @@ _.mixin({
 				this.write_ini("sk", "");
 				window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
 				this.notify_data("2K3.NOTIFY.LASTFM", "update");
-				this.post("auth.getMobileSession");
+				this.auth();
 			}
 		}
 		
