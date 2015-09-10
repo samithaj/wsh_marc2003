@@ -42,7 +42,6 @@ vb.Language = "VBScript";
 
 var drive = fb.ProfilePath.substring(0, 3);
 var git_exe = drive + "Applications\\GitPortable\\GitPortable.exe";
-var pe_exe = drive + "Applications\\ProcessExplorer\\procexp.exe";
 var np_exe = drive + "Applications\\Notepad++\\notepad++.exe";
 var ff_exe = WshShell.ExpandEnvironmentStrings("%USERPROFILE%") + "\\Documents\\FirefoxPortable\\FirefoxPortable.exe";
 
@@ -645,11 +644,8 @@ _.mixin({
 			m1.AppendMenuItem(MF_STRING, 50, "Notepad++");
 			m1.AppendMenuSeparator();
 		}
-		if (_.isFile(pe_exe)) {
-			m1.AppendMenuItem(MF_STRING, 51, "Process Explorer");
-			m1.AppendMenuSeparator();
-		}
 		if (_.isFile(git_exe)) {
+			m1.AppendMenuItem(MF_STRING, 51, "Copy source to git");
 			m1.AppendMenuItem(MF_STRING, 52, "GitPortable");
 			m1.AppendMenuItem(MF_STRING, 53, "Git Folder");
 			m1.AppendMenuSeparator();
@@ -669,7 +665,12 @@ _.mixin({
 			_.run(np_exe);
 			break;
 		case idx == 51:
-			_.run(pe_exe);
+			try {
+				fso.CopyFolder(fso.GetFolder(folders.home), folders.git + "wsh_marc2003");
+				fb.trace("Help Menu: Copy done!");
+			} catch (e) {
+				fb.trace("Help Menu: Copy failed!");
+			}
 			break;
 		case idx == 52:
 			_.run(git_exe);
