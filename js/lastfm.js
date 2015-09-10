@@ -1,23 +1,15 @@
 _.mixin({
 	lastfm : function () {
 		this.notify_data = function (name, data) {
-			switch (name) {
-			case "2K3.NOTIFY.LASTFM":
+			if (name == "2K3.NOTIFY.LASTFM") {
 				this.username = this.read_ini("username");
 				this.sk = this.read_ini("sk");
-				if (this.ps_obj) {
-					this.ps_obj.loved_working = false;
-					this.ps_obj.playcount_working = false;
-					if (panel.metadb)
-						panel.item_focus_change();
-					else
-						this.ps_obj.update_button();
-				}
+				if (this.ps_obj)
+					this.ps_obj.init();
 				_.forEach(panel.list_objects, function (item) {
 					if (item.mode == "lastfm_info" && item.lastfm_mode > 0)
 						item.update();
 				});
-				break;
 			}
 		}
 		
