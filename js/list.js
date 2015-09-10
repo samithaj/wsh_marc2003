@@ -655,22 +655,8 @@ _.mixin({
 			this.xmlhttp.setRequestHeader("User-Agent", this.ua);
 			this.xmlhttp.send(data);
 			this.xmlhttp.onreadystatechange = _.bind(function () {
-				if (this.xmlhttp.readyState == 4) {
-					var data = _.jsonParse(this.xmlhttp.responsetext);
-					if (data.error) {
-						panel.console(data.message);
-					} else {
-						//needs testing if last.fm ever fix this
-						var temp = _.get(data, "recommendations.artist", []);
-						if (_.isUndefined(temp.length))
-							temp = [temp];
-						if (temp.length == 0)
-							return;
-						_.save(JSON.stringify(data), this.filename, -1);
-						window.NotifyOthers("2K3.NOTIFY.LASTFM", "update");
-						this.notify_data("2K3.NOTIFY.LASTFM", "update");
-					}
-				}
+				if (this.xmlhttp.readyState == 4)
+					this.success(this.filename);
 			}, this);
 		}
 		
@@ -718,7 +704,7 @@ _.mixin({
 						this.success(f);
 					} else {
 						panel.console("HTTP error: " + this.xmlhttp.status);
-						this.xmlhttp.responsetext && panel.console(this.xmlhttp.responsetext);
+						this.xmlhttp.responsetext && fb.trace(this.xmlhttp.responsetext);
 					}
 				}
 			}, this);
@@ -751,12 +737,20 @@ _.mixin({
 				//we don't want to overwrite good cached data with nothing.
 				if (data.error)
 					return panel.console(data.message);
-				if (this.lastfm_mode == 0)
+				switch (this.lastfm_mode) {
+				case 0:
 					var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
-				else if (this.lastfm_mode == 1)
+					break;
+				case 1:
 					var temp = _.get(data, this.lastfm_charts_methods[this.lastfm_charts_method].json, []);
-				else if (this.lastfm_mode == 3)
+					break;
+				case 2:
+					var temp = _.get(data, "recommendations.artist", []);
+					break;
+				case 3:
 					var temp = _.get(data, "recenttracks.track", []);
+					break;
+				}
 				if (_.isUndefined(temp.length))
 					temp = [temp];
 				if (temp.length == 0)
