@@ -356,6 +356,8 @@ _.mixin({
 			case 3103:
 				this.lastfm_mode = idx - 3100;
 				window.SetProperty("2K3.LIST.LASTFM.MODE", this.lastfm_mode);
+				this.data = 0;
+				this.items = 0;
 				if (this.lastfm_mode == 0) {
 					this.artist = "";
 					panel.item_focus_change();

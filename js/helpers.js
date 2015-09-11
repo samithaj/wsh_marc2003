@@ -33,6 +33,8 @@ var DLGC_WANTALLKEYS = 0x0004;
 var ONE_DAY = 86400000;
 var ONE_WEEK = 604800000;
 
+var DEFAULT_ARTIST = "$meta(artist,0)";
+
 var doc = new ActiveXObject("htmlfile");
 var app = new ActiveXObject("Shell.Application");
 var WshShell = new ActiveXObject("WScript.Shell");

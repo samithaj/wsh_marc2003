@@ -30,16 +30,17 @@ _.mixin({
 	panel : function (name, features) {
 		this.item_focus_change = function () {
 			if (this.metadb_func) {
-				switch (true) {
-				case this.selection == 0:
+				switch (this.selection) {
+				case 0:
 					this.metadb = fb.IsPlaying ? fb.GetNowPlaying() : fb.GetFocusItem();
 					break;
-				case this.selection == 1:
+				case 1:
 					this.metadb = fb.GetFocusItem();
 					break;
 				}
 				if (this.metadb)
 					on_metadb_changed();
+				window.Repaint();
 			}
 		}
 		
@@ -182,7 +183,7 @@ _.mixin({
 			case idx == 120:
 				this.artist_tf = _.input("The default is $meta(artist,0) so only the first value is used.\n\nYou can use the full foobar2000 title formatting syntax here.", "Artist field remapping", this.artist_tf);
 				if (this.artist_tf == "")
-					this.artist_tf = "$meta(artist,0)";
+					this.artist_tf = DEFAULT_ARTIST;
 				window.SetProperty("2K3.PANEL.ARTIST.TF", this.artist_tf);
 				this.item_focus_change();
 				break;
@@ -239,7 +240,7 @@ _.mixin({
 		this.fonts = {};
 		this.fonts.size = window.GetProperty("2K3.PANEL.FONTS.SIZE", 12);
 		this.selection = this.check_feature("metadb") ? window.GetProperty("2K3.PANEL.SELECTION", 0) : 0;
-		this.artist_tf = this.check_feature("remap") ? window.GetProperty("2K3.PANEL.ARTIST.TF", "$meta(artist,0)") : "$meta(artist,0)";
+		this.artist_tf = this.check_feature("remap") ? window.GetProperty("2K3.PANEL.ARTIST.TF", DEFAULT_ARTIST) : DEFAULT_ARTIST;
 		if (this.check_feature("custom_background")) {
 			this.colours.mode = window.GetProperty("2K3.PANEL.COLOURS.MODE", 0);
 			this.colours.custom = window.GetProperty("2K3.PANEL.COLOURS.CUSTOM", "0-0-0");
