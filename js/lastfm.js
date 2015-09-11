@@ -4,8 +4,7 @@ _.mixin({
 			if (name == "2K3.NOTIFY.LASTFM") {
 				this.username = this.read_ini("username");
 				this.sk = this.read_ini("sk");
-				if (this.ps_obj)
-					this.ps_obj.init();
+				this.scrobbler && this.scrobbler.init();
 				_.forEach(panel.list_objects, function (item) {
 					if (item.mode == "lastfm_info" && item.lastfm_mode > 0)
 						item.update();
@@ -68,7 +67,7 @@ _.mixin({
 			utils.WriteINI(this.ini_file, "Last.fm", k, v);
 		}
 		
-		this.ps_obj = null;
+		this.scrobbler = null;
 		this.ini_file = folders.settings + "lastfm.ini";
 		this.api_key = this.read_ini("api_key");
 		this.secret = this.read_ini("secret");
