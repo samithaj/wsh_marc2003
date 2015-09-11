@@ -524,17 +524,7 @@ _.mixin({
 					}
 					break;
 				case 2:
-					switch (true) {
-					case lastfm.secret.length != 32:
-						panel.console("Last.fm SECRET not set.");
-						break;
-					case lastfm.username.length == 0:
-						panel.console("Last.fm Username not set.");
-						break;
-					case lastfm.sk.length != 32:
-						panel.console("Last.fm Password not set.");
-						break;
-					default:
+					if (lastfm.ok()) {
 						this.filename = folders.data + "lastfm\\" + lastfm.username + ".user.getRecommendedArtists.json";
 						if (_.isFile(this.filename)) {
 							var data = _.jsonParse(_.open(this.filename), "recommendations.artist");
@@ -553,7 +543,6 @@ _.mixin({
 						} else {
 							this.post();
 						}
-						break;
 					}
 					break;
 				case 3:
@@ -651,11 +640,11 @@ _.mixin({
 		
 		this.post = function () {
 			var api_sig = md5("api_key" + lastfm.api_key + "limit250methoduser.getRecommendedArtistssk" + lastfm.sk + lastfm.secret);
-			var data = "format=json&limit=250&sk=" + "&method=user.getRecommendedArtists&api_key=" + lastfm.api_key + "&api_sig=" + api_sig;
+			var post_data = "format=json&limit=250&sk=" + "&method=user.getRecommendedArtists&api_key=" + lastfm.api_key + "&api_sig=" + api_sig;
 			this.xmlhttp.open("POST", "https://ws.audioscrobbler.com/2.0/", true);
 			this.xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			this.xmlhttp.setRequestHeader("User-Agent", this.ua);
-			this.xmlhttp.send(data);
+			this.xmlhttp.send(post_data);
 			this.xmlhttp.onreadystatechange = _.bind(function () {
 				if (this.xmlhttp.readyState == 4)
 					this.success(this.filename);
