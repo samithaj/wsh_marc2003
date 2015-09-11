@@ -210,14 +210,13 @@ _.mixin({
 		}
 		
 		this.tf = function (t) {
-			switch (true) {
-			case !this.metadb:
+			if (!this.metadb)
 				return "";
-			case fb.IsPlaying && this.metadb.Path.indexOf("http") == 0:
+			var path = _.tf("$if2(%__@%,%path%)", this.metadb);
+			if (fb.IsPlaying && (path.indexOf("http") == 0 || path.indexOf("mms") == 0))
 				return _.tfe(t);
-			default:
+			else
 				return _.tf(t, this.metadb);
-			}
 		}
 		
 		this.console = function (t) {
