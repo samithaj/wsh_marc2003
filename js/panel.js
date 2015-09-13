@@ -116,7 +116,6 @@ _.mixin({
 			//panel 1-999
 			//album art 2000-2999
 			//list 3000-3999
-			//playcount sync 4000-4999
 			//text 5000-5999
 			object && object.rbtn_up(x, y);
 			if (this.list_objects.length + this.text_objects.length > 0) {

@@ -1,10 +1,8 @@
 _.mixin({
 	scrobbler : function (x, y) {
 		this.notify_data = function (name, data) {
-			if (name == "2K3.NOTIFY.LOVE") {
-				if (lastfm.ok())
-					this.post(_.tf("%LASTFM_LOVED_DB%", data) == 1 ? "track.unlove" : "track.love", data);
-			}
+			if (name == "2K3.NOTIFY.LOVE" && lastfm.ok())
+				this.post(_.tf("%LASTFM_LOVED_DB%", data) == 1 ? "track.unlove" : "track.love", data);
 		}
 		
 		this.playback_time = function () {
@@ -13,13 +11,16 @@ _.mixin({
 			case this.loved_working:
 			case this.playcount_working:
 				break;
-			case this.time_elapsed == 2:
+			case this.time_elapsed == 2 && fb.IsMetadbInMediaLibrary(fb.GetNowPlaying()):
 				this.post("track.updateNowPlaying", fb.GetNowPlaying());
 				break;
 			case this.time_elapsed == this.target_time:
 				if (!fb.IsMetadbInMediaLibrary(fb.GetNowPlaying()))
-					return panel.console("Skipping... Track not in Media Library.");
-				this.post("track.scrobble", fb.GetNowPlaying());
+					panel.console("Skipping... Track not in Media Library.");
+				else if (fb.PlaybackLength < this.min_length)
+					this.get("track.getInfo", fb.GetNowPlaying()); //still check to see if a track is loved even if it is too short to scrobble
+				else
+					this.post("track.scrobble", fb.GetNowPlaying());
 				break;
 			}
 		}
@@ -31,42 +32,6 @@ _.mixin({
 				this.target_time = 5;
 			else
 				this.target_time = Math.min(_.ceil(fb.PlaybackLength / 2), 240);
-		}
-		
-		this.rbtn_up = function () {
-			var flag = !this.loved_working && !this.playcount_working && lastfm.username.length > 0 ? MF_STRING : MF_GRAYED;
-			panel.s10.AppendMenuItem(flag, 4000, "loved tracks and playcount");
-			panel.s10.AppendMenuItem(flag, 4001, "loved tracks only");
-			panel.s10.AppendTo(panel.m, MF_STRING, "Library import");
-			panel.m.AppendMenuSeparator();
-			panel.s11.AppendTo(panel.m, MF_STRING, "Auto-updates");
-			panel.m.AppendMenuSeparator();
-			if ("ShowLibrarySearchUI" in fb) {
-				panel.m.AppendMenuItem(MF_STRING, 4020, "Show loved tracks");
-				panel.m.AppendMenuSeparator();
-			}
-			panel.m.AppendMenuItem(MF_STRING, 4030, "Last.fm username...");
-			panel.m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 4031, "Last.fm password...");
-			panel.m.AppendMenuSeparator();
-		}
-		
-		this.rbtn_up_done = function (idx) {
-			switch (idx) {
-			case 4000:
-			case 4001:
-				this.full_import = idx == 4000;
-				this.start_import();
-				break;
-			case 4020:
-				fb.ShowLibrarySearchUI("%LASTFM_LOVED_DB% IS 1");
-				break;
-			case 4030:
-				lastfm.update_username();
-				break;
-			case 4031:
-				lastfm.update_password();
-				break;
-			}
 		}
 		
 		this.post = function (method, metadb) {
@@ -360,7 +325,8 @@ _.mixin({
 		}
 		
 		this.log = function (timestamp, artist, album, track, duration) {
-			var f = folders.data + "lastfm\\" + lastfm.username + ".scrobble.log.json";
+			var d = new Date(timestamp * 1000);
+			var f = folders.data + "lastfm\\" + lastfm.username + "." + _.padLeft(d.getMonth() + 1, 2, 0) + "." + d.getFullYear() + ".scrobble.log.json";
 			if (_.isFile(f))
 				var data = _.jsonParse(_.open(f));
 			else
@@ -403,6 +369,62 @@ _.mixin({
 			_.run(_.shortPath(this.cmd_file), _.shortPath(this.sqlite3_file), _.shortPath(this.db_file), _.shortPath(this.sql_file));
 		}
 		
+		this.update_button = function () {
+			var n = "mono\\appbar.warning.circle.png";
+			switch (true) {
+			case lastfm.username.length == 0:
+				var tooltip = "Click to set your username.";
+				break;
+			case lastfm.sk.length != 32:
+				var tooltip = "Click to set your password.";
+				break;
+			default:
+				n = "mono\\appbar.social.lastfm.png";
+				var tooltip = "Last.fm Settings";
+				break;
+			}
+			buttons.buttons.scrobbler = new _.button(this.x, this.y, 36, 36, {normal : n}, _.bind(function () { this.menu(); }, this), tooltip);
+			window.RepaintRect(buttons.buttons.scrobbler.x, buttons.buttons.scrobbler.y, buttons.buttons.scrobbler.w, buttons.buttons.scrobbler.h);
+		}
+		
+		this.menu = function () {
+			var m = window.CreatePopupMenu();
+			var s = window.CreatePopupMenu();
+			m.AppendMenuItem(MF_STRING, 1, "Last.fm username...");
+			m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 2, "Last.fm password...");
+			m.AppendMenuSeparator();
+			var flag = !this.loved_working && !this.playcount_working && lastfm.username.length > 0 ? MF_STRING : MF_GRAYED;
+			s.AppendMenuItem(flag, 3, "loved tracks and playcount");
+			s.AppendMenuItem(flag, 4, "loved tracks only");
+			s.AppendTo(m, MF_STRING, "Library import");
+			m.AppendMenuSeparator();
+			m.AppendMenuItem(MF_STRING, 5, "Show loved tracks");
+			m.AppendMenuSeparator();
+			m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 6, "View profile");
+			var idx = m.TrackPopupMenu(this.x, 36);
+			switch (idx) {
+			case 1:
+				lastfm.update_username();
+				break;
+			case 2:
+				lastfm.update_password();
+				break;
+			case 3:
+			case 4:
+				this.full_import = idx == 3;
+				this.start_import();
+				break;
+			case 5:
+				fb.ShowLibrarySearchUI("%LASTFM_LOVED_DB% IS 1");
+				break;
+			case 6:
+				_.browser("http://www.last.fm/user/" + lastfm.username);
+				break;
+			}
+			m.Dispose();
+			s.Dispose();
+		}
+		
 		this.interval_func = _.bind(function () {
 			if (!this.loved_working && !this.playcount_working)
 				return;
@@ -415,24 +437,6 @@ _.mixin({
 			else if (this.playcount_working)
 				this.get("library.getTracks", null, temp);
 		}, this);
-		
-		this.update_button = function () {
-			var n = "mono\\appbar.warning.circle.png";
-			switch (true) {
-			case lastfm.username.length == 0:
-				var tooltip = "Click to set your username.";
-				break;
-			case lastfm.sk.length != 32:
-				var tooltip = "Click to set your password.";
-				break;
-			default:
-				n = "mono\\appbar.social.lastfm.png";
-				var tooltip = "Playcount sync options";
-				break;
-			}
-			buttons.buttons.scrobbler = new _.button(this.x, this.y, 36, 36, {normal : n}, function () { options(this.x, 36); }, tooltip);
-			window.RepaintRect(buttons.buttons.scrobbler.x, buttons.buttons.scrobbler.y, buttons.buttons.scrobbler.w, buttons.buttons.scrobbler.h);
-		}
 		
 		lastfm.scrobbler = this;
 		_.createFolder(folders.data);

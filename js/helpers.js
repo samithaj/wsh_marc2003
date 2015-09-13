@@ -207,8 +207,8 @@ _.mixin({
 			temp += d + "d ";
 		if (w > 0 || d > 0 || h > 0)
 			temp += h + ":";
-		temp += (m < 10 && h > 0 ? "0" + m : m) + ":";
-		temp += (s < 10 ? "0" + s : s);
+		temp += (h > 0 ? _.padLeft(m, 2, 0) : m) + ":";
+		temp += _.padLeft(s, 2, 0);
 		return temp + z;
 	},
 	formatSize : function (size) {
