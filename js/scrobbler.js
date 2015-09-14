@@ -15,12 +15,15 @@ _.mixin({
 				this.post("track.updateNowPlaying", fb.GetNowPlaying());
 				break;
 			case this.time_elapsed == this.target_time:
-				if (!fb.IsMetadbInMediaLibrary(fb.GetNowPlaying()))
+				if (!fb.IsMetadbInMediaLibrary(fb.GetNowPlaying())) {
 					panel.console("Skipping... Track not in Media Library.");
-				else if (fb.PlaybackLength < this.min_length)
-					this.get("track.getInfo", fb.GetNowPlaying()); //still check to see if a track is loved even if it is too short to scrobble
-				else
+				} else if (fb.PlaybackLength < this.min_length) {
+					panel.console("Not submitting. Track too short.");
+					//still check to see if a track is loved even if it is too short to scrobble
+					this.get("track.getInfo", fb.GetNowPlaying());
+				} else {
 					this.post("track.scrobble", fb.GetNowPlaying());
+				}
 				break;
 			}
 		}
@@ -52,15 +55,11 @@ _.mixin({
 				var post_data = "sk=" + lastfm.sk + "&artist=" + encodeURIComponent(artist) + "&track=" + encodeURIComponent(track);
 				break;
 			case "track.scrobble":
-				if (duration < this.min_length)
-					return panel.console("Not submitting. Track too short.");
 				this.log(this.timestamp, artist, album, track, duration);
 				var api_sig = md5("album" + album + "api_key" + lastfm.api_key + "artist" + artist + "duration" + duration + "method" + method + "sk" + lastfm.sk + "timestamp" + this.timestamp + "track" + track + lastfm.secret);
 				var post_data = "format=json&sk=" + lastfm.sk + "&duration=" + duration + "&timestamp=" + this.timestamp + "&album=" + encodeURIComponent(album) + "&artist=" + encodeURIComponent(artist) + "&track=" + encodeURIComponent(track);
 				break;
 			case "track.updateNowPlaying":
-				if (duration < this.min_length)
-					return;
 				var api_sig = md5("api_key" + lastfm.api_key + "artist" + artist + "duration" + duration + "method" + method + "sk" + lastfm.sk + "track" + track + lastfm.secret);
 				var post_data = "format=json&sk=" + lastfm.sk + "&duration=" + duration + "&artist=" + encodeURIComponent(artist) + "&track=" + encodeURIComponent(track);
 				break;
