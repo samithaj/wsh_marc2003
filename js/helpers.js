@@ -57,6 +57,7 @@ folders.images = folders.home + "images\\";
 folders.settings = fb.ProfilePath + "wsh_settings\\";
 folders.data = fb.ProfilePath + "wsh_data\\";
 folders.artists = folders.data + "artists\\";
+folders.lastfm = folders.data + "lastfm\\";
 folders.docs = fb.ComponentPath + "docs\\";
 folders.git = drive + "Applications\\GitPortable\\Data\\Home\\";
 

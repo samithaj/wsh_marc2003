@@ -326,7 +326,7 @@ _.mixin({
 		
 		this.log = function (timestamp, artist, album, track, duration) {
 			var d = new Date(timestamp * 1000);
-			var f = folders.data + "lastfm\\" + lastfm.username + "." + _.padLeft(d.getMonth() + 1, 2, 0) + "." + d.getFullYear() + ".scrobble.log.json";
+			var f = folders.lastfm + lastfm.username + "." + _.padLeft(d.getMonth() + 1, 2, 0) + "." + d.getFullYear() + ".scrobble.log.json";
 			if (_.isFile(f))
 				var data = _.jsonParse(_.open(f));
 			else
@@ -440,7 +440,7 @@ _.mixin({
 		
 		lastfm.scrobbler = this;
 		_.createFolder(folders.data);
-		_.createFolder(folders.data + "lastfm\\");
+		_.createFolder(folders.lastfm);
 		_.createFolder(folders.settings);
 		this.x = x;
 		this.y = y;

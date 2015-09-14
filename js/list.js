@@ -500,7 +500,7 @@ _.mixin({
 						panel.console("Last.fm Username not set.");
 						break;
 					}
-					this.filename = folders.data + "lastfm\\" + lastfm.username + "." + this.lastfm_charts_methods[this.lastfm_charts_method].method + "." + this.lastfm_charts_periods[this.lastfm_charts_period].period + ".json";
+					this.filename = folders.lastfm + lastfm.username + "." + this.lastfm_charts_methods[this.lastfm_charts_method].method + "." + this.lastfm_charts_periods[this.lastfm_charts_period].period + ".json";
 					if (_.isFile(this.filename)) {
 						var data = _.jsonParse(_.open(this.filename), this.lastfm_charts_methods[this.lastfm_charts_method].json);
 						if (_.isUndefined(data.length))
@@ -525,7 +525,7 @@ _.mixin({
 					break;
 				case 2:
 					if (lastfm.ok()) {
-						this.filename = folders.data + "lastfm\\" + lastfm.username + ".user.getRecommendedArtists.json";
+						this.filename = folders.lastfm + lastfm.username + ".user.getRecommendedArtists.json";
 						if (_.isFile(this.filename)) {
 							var data = _.jsonParse(_.open(this.filename), "recommendations.artist");
 							if (_.isUndefined(data.length))
@@ -550,7 +550,7 @@ _.mixin({
 						panel.console("Last.fm Username not set.");
 						break;
 					}
-					this.filename = folders.data + "lastfm\\" + lastfm.username + ".user.getRecentTracks.json";
+					this.filename = folders.lastfm + lastfm.username + ".user.getRecentTracks.json";
 					if (_.isFile(this.filename)) {
 						var data = _.jsonParse(_.open(this.filename), "recenttracks.track");
 						_.forEach(data, function (item) {
@@ -906,7 +906,7 @@ _.mixin({
 				break;
 			case "lastfm_info":
 				_.createFolder(folders.data);
-				_.createFolder(folders.data + "lastfm\\");
+				_.createFolder(folders.lastfm);
 				_.createFolder(folders.artists);
 				_.createFolder(folders.settings);
 				this.ua = lastfm.ua;
