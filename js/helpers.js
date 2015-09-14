@@ -42,13 +42,10 @@ var fso = new ActiveXObject("Scripting.FileSystemObject");
 var vb = new ActiveXObject("ScriptControl");
 vb.Language = "VBScript";
 
-var drive = fb.ProfilePath.substring(0, 3);
-var git_exe = drive + "Applications\\GitPortable\\GitPortable.exe";
-var np_exe = drive + "Applications\\Notepad++\\notepad++.exe";
-var ff_exe = WshShell.ExpandEnvironmentStrings("%USERPROFILE%") + "\\Documents\\FirefoxPortable\\FirefoxPortable.exe";
-
 var tooltip = window.CreateTooltip();
 tooltip.SetMaxWidth(800);
+
+var drive = fb.ProfilePath.substring(0, 3);
 
 var folders = {};
 folders.home = fb.ProfilePath + "wsh_marc2003\\";
@@ -59,7 +56,11 @@ folders.data = fb.ProfilePath + "wsh_data\\";
 folders.artists = folders.data + "artists\\";
 folders.lastfm = folders.data + "lastfm\\";
 folders.docs = fb.ComponentPath + "docs\\";
-folders.git = drive + "Applications\\GitPortable\\Data\\Home\\";
+folders.git = drive + "Applications\\PortableGit\\";
+
+var np_exe = drive + "Applications\\Notepad++\\notepad++.exe";
+var ff_exe = WshShell.ExpandEnvironmentStrings("%USERPROFILE%") + "\\Documents\\FirefoxPortable\\FirefoxPortable.exe";
+var git_cmd = folders.git + "git.cmd";
 
 var guifx = {
 	font : "Guifx v2 Transports",
@@ -647,9 +648,9 @@ _.mixin({
 			m1.AppendMenuItem(MF_STRING, 50, "Notepad++");
 			m1.AppendMenuSeparator();
 		}
-		if (_.isFile(git_exe)) {
+		if (_.isFile(git_cmd)) {
 			m1.AppendMenuItem(MF_STRING, 51, "Copy source to git");
-			m1.AppendMenuItem(MF_STRING, 52, "GitPortable");
+			m1.AppendMenuItem(MF_STRING, 52, "PortableGit");
 			m1.AppendMenuItem(MF_STRING, 53, "Git Folder");
 			m1.AppendMenuSeparator();
 		}
@@ -669,14 +670,14 @@ _.mixin({
 			break;
 		case idx == 51:
 			try {
-				fso.CopyFolder(fso.GetFolder(folders.home), folders.git + "wsh_marc2003");
+				fso.CopyFolder(fso.GetFolder(folders.home), folders.git + "home\\wsh_marc2003");
 				fb.trace("Help Menu: Copy done!");
 			} catch (e) {
 				fb.trace("Help Menu: Copy failed!");
 			}
 			break;
 		case idx == 52:
-			_.run(git_exe);
+			_.run(git_cmd);
 			break;
 		case idx == 53:
 			_.run(folders.git);
