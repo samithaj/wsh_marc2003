@@ -390,10 +390,11 @@ _.mixin({
 		this.menu = function () {
 			var m = window.CreatePopupMenu();
 			var s = window.CreatePopupMenu();
-			m.AppendMenuItem(MF_STRING, 1, "Last.fm username...");
-			m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 2, "Last.fm password...");
+			var working = this.loved_working || this.playcount_working;
+			var flag = working || lastfm.username.length == 0 ? MF_GRAYED : MF_STRING;
+			m.AppendMenuItem(working ? MF_GRAYED : MF_STRING, 1, "Last.fm username...");
+			m.AppendMenuItem(flag, 2, "Last.fm password...");
 			m.AppendMenuSeparator();
-			var flag = !this.loved_working && !this.playcount_working && lastfm.username.length > 0 ? MF_STRING : MF_GRAYED;
 			s.AppendMenuItem(flag, 3, "loved tracks and playcount");
 			s.AppendMenuItem(flag, 4, "loved tracks only");
 			s.AppendTo(m, MF_STRING, "Library import");
