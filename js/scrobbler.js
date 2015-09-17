@@ -8,9 +8,6 @@ _.mixin({
 		this.playback_time = function () {
 			this.time_elapsed++;
 			switch (true) {
-			case this.loved_working:
-			case this.playcount_working:
-				break;
 			case this.time_elapsed == 2 && fb.IsMetadbInMediaLibrary(fb.GetNowPlaying()):
 				this.post("track.updateNowPlaying", fb.GetNowPlaying());
 				break;
@@ -19,8 +16,9 @@ _.mixin({
 					panel.console("Skipping... Track not in Media Library.");
 				} else if (fb.PlaybackLength < this.min_length) {
 					panel.console("Not submitting. Track too short.");
-					//still check to see if a track is loved even if it is too short to scrobble
-					this.get("track.getInfo", fb.GetNowPlaying());
+					//if not importing, still check to see if a track is loved even if it is too short to scrobble
+					if (!this.loved_working && !this.playcount_working)
+						this.get("track.getInfo", fb.GetNowPlaying());
 				} else {
 					this.post("track.scrobble", fb.GetNowPlaying());
 				}
@@ -158,8 +156,10 @@ _.mixin({
 					data = _.get(data, 'scrobbles["@attr"]');
 					if (data.accepted == 1) {
 						panel.console("Track scrobbled successfully.");
-						panel.console("Now fetching updated playcount...");
-						this.get("track.getInfo", metadb);
+						if (!this.loved_working && !this.playcount_working) {
+							panel.console("Now fetching updated playcount...");
+							this.get("track.getInfo", metadb);
+						}
 					} else if (data.ignored == 1) {
 						panel.console("Track not scrobbled. The submission server refused it possibly because of incomplete tags or incorrect system time.");
 					}
