@@ -1,7 +1,7 @@
 _.mixin({
 	scrobbler : function (x, y) {
 		this.notify_data = function (name, data) {
-			if (name == "2K3.NOTIFY.LOVE" && lastfm.ok())
+			if (name == "2K3.NOTIFY.LOVE")
 				this.post(_.tf("%LASTFM_LOVED_DB%", data) == 1 ? "track.unlove" : "track.love", data);
 		}
 		
