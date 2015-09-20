@@ -29,10 +29,7 @@ _.mixin({
 		this.playback_new_track = function () {
 			this.timestamp = _.floor(_.now() / 1000);
 			this.time_elapsed = 0;
-			if (fb.PlaybackLength < this.min_length)
-				this.target_time = 5;
-			else
-				this.target_time = Math.min(_.ceil(fb.PlaybackLength / 2), 240);
+			this.target_time = Math.min(_.ceil(fb.PlaybackLength / 2), 240);
 		}
 		
 		this.post = function (method, metadb) {
