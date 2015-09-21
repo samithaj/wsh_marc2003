@@ -5,26 +5,26 @@ End If
 url = WScript.Arguments(0)
 file = WScript.Arguments(1)
 
-Set objFSO = Createobject("Scripting.FileSystemObject")
-If objFSO.FileExists(file) Then
-	Set objFSO = Nothing
+Set fso = CreateObject("Scripting.FileSystemObject")
+If fso.FileExists(file) Then
+	Set fso = Nothing
 	WScript.Quit
 End If
 
-Set objXMLHTTP = CreateObject("MSXML2.XMLHTTP")
-objXMLHTTP.open "GET", url, false
-objXMLHTTP.send()
+Set xmlhttp = CreateObject("MSXML2.XMLHTTP")
+xmlhttp.open "GET", url, false
+xmlhttp.send()
 
-If objXMLHTTP.Status = 200 Then
-	Set objADOStream = CreateObject("ADODB.Stream")
-	objADOStream.Open
-	objADOStream.Type = 1
-	objADOStream.Write objXMLHTTP.ResponseBody
-	objADOStream.Position = 0
-	objADOStream.SaveToFile file
-	objADOStream.Close
-	Set objADOStream = Nothing
+If xmlhttp.Status = 200 Then
+	Set stream = CreateObject("ADODB.Stream")
+	stream.Open
+	stream.Type = 1
+	stream.Write xmlhttp.ResponseBody
+	stream.Position = 0
+	stream.SaveToFile file
+	stream.Close
+	Set stream = Nothing
 End If
 
-Set objFSO = Nothing
-Set objXMLHTTP = Nothing
+Set fso = Nothing
+Set xmlhttp = Nothing

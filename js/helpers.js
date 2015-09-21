@@ -438,7 +438,7 @@ _.mixin({
 			return x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h;
 		}
 		
-		this.lbtn_up = function () {
+		this.lbtn_up = function (x, y) {
 			this.fn && this.fn(x, y);
 		}
 		
