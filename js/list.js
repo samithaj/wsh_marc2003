@@ -416,7 +416,7 @@ _.mixin({
 			case 3210:
 				this.mb_icons = !this.mb_icons;
 				window.SetProperty("2K3.LIST.MUSICBRAINZ.SHOW.ICONS", this.mb_icons);
-				window.Repaint();
+				window.RepaintRect(this.x, this.y, this.w, this.h);
 				break;
 			case 3999:
 				_.explorer(this.filename);

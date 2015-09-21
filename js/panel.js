@@ -40,7 +40,8 @@ _.mixin({
 				}
 				if (this.metadb)
 					on_metadb_changed();
-				window.Repaint();
+				else
+					window.Repaint();
 			}
 		}
 		
