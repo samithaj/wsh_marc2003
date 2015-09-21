@@ -347,8 +347,7 @@ _.mixin({
 			case 3052:
 				this.echonest_mode = idx - 3050;
 				window.SetProperty("2K3.LIST.ECHONEST.MODE", this.echonest_mode);
-				this.artist = "";
-				panel.item_focus_change();
+				this.reset();
 				break;
 			case 3100:
 			case 3101:
@@ -356,11 +355,8 @@ _.mixin({
 			case 3103:
 				this.lastfm_mode = idx - 3100;
 				window.SetProperty("2K3.LIST.LASTFM.MODE", this.lastfm_mode);
-				this.data = [];
-				this.items = 0;
 				if (this.lastfm_mode == 0) {
-					this.artist = "";
-					panel.item_focus_change();
+					this.reset();
 				} else {
 					this.update();
 				}
@@ -372,8 +368,7 @@ _.mixin({
 			case 3114:
 				this.lastfm_artist_method = idx - 3110;
 				window.SetProperty("2K3.LIST.LASTFM.ARTIST.METHOD", this.lastfm_artist_method);
-				this.artist = "";
-				panel.item_focus_change();
+				this.reset();
 				break;
 			case 3120:
 			case 3121:
@@ -407,8 +402,7 @@ _.mixin({
 			case 3201:
 				this.mb_mode = idx - 3200;
 				window.SetProperty("2K3.LIST.MUSICBRAINZ.MODE", this.mb_mode);
-				this.artist = "";
-				panel.item_focus_change();
+				this.reset();
 				break;
 			case 3203:
 				_.browser("https://musicbrainz.org/search?type=artist&method=indexed&query=" + encodeURIComponent(_.mbEscape(this.artist)));
@@ -779,6 +773,13 @@ _.mixin({
 			case "properties":
 				return panel.tf("%artist% - %title%");
 			}
+		}
+		
+		this.reset = function () {
+			this.items = 0;
+			this.data = [];
+			this.artist = "";
+			panel.item_focus_change();
 		}
 		
 		this.init = function () {
