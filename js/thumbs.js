@@ -507,7 +507,7 @@ _.mixin({
 		
 		this.success = function (base) {
 			_(_.getElementsByTagName(this.xmlhttp.responsetext, "img"))
-				.filter(function (item, i) {
+				.filter(function (item) {
 					return item.src.indexOf("http://img2-ak.lst.fm/i/u/60x60") == 0;
 				})
 				.take(this.download_limit)
