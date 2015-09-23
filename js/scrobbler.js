@@ -8,6 +8,8 @@ _.mixin({
 		this.playback_time = function () {
 			this.time_elapsed++;
 			switch (true) {
+			case !this.enabled:
+				return;
 			case this.time_elapsed == 2 && fb.IsMetadbInMediaLibrary(fb.GetNowPlaying()):
 				this.post("track.updateNowPlaying", fb.GetNowPlaying());
 				break;
@@ -374,6 +376,9 @@ _.mixin({
 			case lastfm.sk.length != 32:
 				var tooltip = "Click to set your password.";
 				break;
+			case !this.enabled:
+				var tooltip = "Click to enable.";
+				break;
 			default:
 				n = "mono\\appbar.social.lastfm.png";
 				var tooltip = "Last.fm Settings";
@@ -391,13 +396,16 @@ _.mixin({
 			m.AppendMenuItem(working ? MF_GRAYED : MF_STRING, 1, "Last.fm username...");
 			m.AppendMenuItem(flag, 2, "Last.fm password...");
 			m.AppendMenuSeparator();
-			s.AppendMenuItem(flag, 3, "loved tracks and playcount");
-			s.AppendMenuItem(flag, 4, "loved tracks only");
+			m.AppendMenuItem(flag, 3, "Enabled");
+			m.CheckMenuItem(3, this.enabled);
+			m.AppendMenuSeparator();
+			s.AppendMenuItem(flag, 4, "loved tracks and playcount");
+			s.AppendMenuItem(flag, 5, "loved tracks only");
 			s.AppendTo(m, MF_STRING, "Library import");
 			m.AppendMenuSeparator();
-			m.AppendMenuItem(MF_STRING, 5, "Show loved tracks");
+			m.AppendMenuItem(MF_STRING, 6, "Show loved tracks");
 			m.AppendMenuSeparator();
-			m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 6, "View profile");
+			m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 7, "View profile");
 			var idx = m.TrackPopupMenu(this.x, 36);
 			switch (idx) {
 			case 1:
@@ -407,14 +415,19 @@ _.mixin({
 				lastfm.update_password();
 				break;
 			case 3:
+				this.enabled = !this.enabled;
+				window.SetProperty("2K3.SCROBBLER.ENABLED", this.enabled);
+				this.update_button();
+				break;
 			case 4:
-				this.full_import = idx == 3;
+			case 5:
+				this.full_import = idx == 4;
 				this.start_import();
 				break;
-			case 5:
+			case 6:
 				fb.ShowLibrarySearchUI("%LASTFM_LOVED_DB% IS 1");
 				break;
-			case 6:
+			case 7:
 				_.browser("http://www.last.fm/user/" + lastfm.username);
 				break;
 			}
@@ -450,6 +463,7 @@ _.mixin({
 		this.sql_file = folders.data + "lastfm.sql";
 		this.page = 0;
 		this.last_page = 0;
+		this.enabled = window.GetProperty("2K3.SCROBBLER.ENABLED", true);
 		this.xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		window.SetInterval(this.interval_func, 15000);
 	}
