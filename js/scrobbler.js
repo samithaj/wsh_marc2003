@@ -29,7 +29,6 @@ _.mixin({
 		}
 		
 		this.playback_new_track = function () {
-			this.timestamp = _.floor(_.now() / 1000);
 			this.time_elapsed = 0;
 			this.target_time = Math.min(_.ceil(fb.PlaybackLength / 2), 240);
 		}
@@ -37,6 +36,7 @@ _.mixin({
 		this.post = function (method, metadb) {
 			if (!lastfm.ok())
 				return;
+			var timestamp = _.floor(_.now() / 1000);
 			var artist = _.tf("%artist%", metadb);
 			var track = _.tf("%title%", metadb);
 			var album = _.tf("[%album%]", metadb);
@@ -52,9 +52,9 @@ _.mixin({
 				var post_data = "sk=" + lastfm.sk + "&artist=" + encodeURIComponent(artist) + "&track=" + encodeURIComponent(track);
 				break;
 			case "track.scrobble":
-				this.log(this.timestamp, artist, album, track, duration);
-				var api_sig = md5("album" + album + "api_key" + lastfm.api_key + "artist" + artist + "duration" + duration + "method" + method + "sk" + lastfm.sk + "timestamp" + this.timestamp + "track" + track + lastfm.secret);
-				var post_data = "format=json&sk=" + lastfm.sk + "&duration=" + duration + "&timestamp=" + this.timestamp + "&album=" + encodeURIComponent(album) + "&artist=" + encodeURIComponent(artist) + "&track=" + encodeURIComponent(track);
+				this.log(timestamp, artist, album, track, duration);
+				var api_sig = md5("album" + album + "api_key" + lastfm.api_key + "artist" + artist + "duration" + duration + "method" + method + "sk" + lastfm.sk + "timestamp" + timestamp + "track" + track + lastfm.secret);
+				var post_data = "format=json&sk=" + lastfm.sk + "&duration=" + duration + "&timestamp=" + timestamp + "&album=" + encodeURIComponent(album) + "&artist=" + encodeURIComponent(artist) + "&track=" + encodeURIComponent(track);
 				break;
 			case "track.updateNowPlaying":
 				var api_sig = md5("api_key" + lastfm.api_key + "artist" + artist + "duration" + duration + "method" + method + "sk" + lastfm.sk + "track" + track + lastfm.secret);
