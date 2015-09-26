@@ -5,6 +5,11 @@ _.mixin({
 				this.post(_.tf("%LASTFM_LOVED_DB%", data) == 1 ? "track.unlove" : "track.love", data);
 		}
 		
+		this.playback_new_track = function () {
+			this.time_elapsed = 0;
+			this.target_time = Math.min(_.ceil(fb.PlaybackLength / 2), 240);
+		}
+		
 		this.playback_time = function () {
 			this.time_elapsed++;
 			switch (true) {
@@ -26,11 +31,6 @@ _.mixin({
 				}
 				break;
 			}
-		}
-		
-		this.playback_new_track = function () {
-			this.time_elapsed = 0;
-			this.target_time = Math.min(_.ceil(fb.PlaybackLength / 2), 240);
 		}
 		
 		this.post = function (method, metadb) {

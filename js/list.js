@@ -125,17 +125,17 @@ _.mixin({
 			}
 		}
 		
+		this.playback_new_track = function () {
+			panel.item_focus_change();
+			this.time_elapsed = 0;
+		}
+		
 		this.playback_time = function () {
 			if (this.lastfm_mode != 3)
 				return;
 			this.time_elapsed++;
 			if (this.time_elapsed == 3)
 				this.get();
-		}
-		
-		this.playback_new_track = function () {
-			panel.item_focus_change();
-			this.time_elapsed = 0;
 		}
 		
 		this.trace = function (x, y) {

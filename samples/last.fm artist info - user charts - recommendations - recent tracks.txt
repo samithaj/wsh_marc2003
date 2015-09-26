@@ -40,12 +40,12 @@ function on_metadb_changed() {
 	list.metadb_changed();
 }
 
-function on_playback_time() {
-	list.playback_time();
-}
-
 function on_playback_new_track() {
 	list.playback_new_track();
+}
+
+function on_playback_time() {
+	list.playback_time();
 }
 
 function on_mouse_wheel(s) {

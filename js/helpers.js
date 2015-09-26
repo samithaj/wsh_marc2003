@@ -649,7 +649,6 @@ _.mixin({
 			m1.AppendMenuSeparator();
 		}
 		if (_.isFile(git_cmd)) {
-			m1.AppendMenuItem(MF_STRING, 51, "Copy source to git");
 			m1.AppendMenuItem(MF_STRING, 52, "PortableGit");
 			m1.AppendMenuItem(MF_STRING, 53, "Git Folder");
 			m1.AppendMenuSeparator();
@@ -667,14 +666,6 @@ _.mixin({
 			break;
 		case idx == 50:
 			_.run(np_exe);
-			break;
-		case idx == 51:
-			try {
-				fso.CopyFolder(fso.GetFolder(folders.home), folders.git + "home\\wsh_marc2003");
-				fb.trace("Help Menu: Copy done!");
-			} catch (e) {
-				fb.trace("Help Menu: Copy failed!");
-			}
 			break;
 		case idx == 52:
 			_.run(git_cmd);
