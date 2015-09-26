@@ -60,7 +60,6 @@ folders.git = drive + "Applications\\PortableGit\\";
 
 var np_exe = drive + "Applications\\Notepad++\\notepad++.exe";
 var ff_exe = WshShell.ExpandEnvironmentStrings("%USERPROFILE%") + "\\Documents\\FirefoxPortable\\FirefoxPortable.exe";
-var git_cmd = folders.git + "git.cmd";
 
 var guifx = {
 	font : "Guifx v2 Transports",
@@ -648,9 +647,8 @@ _.mixin({
 			m1.AppendMenuItem(MF_STRING, 50, "Notepad++");
 			m1.AppendMenuSeparator();
 		}
-		if (_.isFile(git_cmd)) {
-			m1.AppendMenuItem(MF_STRING, 52, "PortableGit");
-			m1.AppendMenuItem(MF_STRING, 53, "Git Folder");
+		if (_.isFolder(folders.git)) {
+			m1.AppendMenuItem(MF_STRING, 51, "Git Folder");
 			m1.AppendMenuSeparator();
 		}
 		m1.AppendMenuItem(MF_STRING, 70, "Configure...");
@@ -667,10 +665,7 @@ _.mixin({
 		case idx == 50:
 			_.run(np_exe);
 			break;
-		case idx == 52:
-			_.run(git_cmd);
-			break;
-		case idx == 53:
+		case idx == 51:
 			_.run(folders.git);
 			break;
 		case idx == 70:
