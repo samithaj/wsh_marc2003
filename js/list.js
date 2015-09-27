@@ -707,15 +707,13 @@ _.mixin({
 					this.get();
 				} else {
 					_.save(JSON.stringify(this.mb_data), f);
-					this.artist = "";
-					panel.item_focus_change();
+					this.reset()
 				}
 				break;
 			case this.mode == "musicbrainz": //links
 			case this.mode == "echonest":
 				_.save(JSON.stringify(data), f);
-				this.artist = "";
-				panel.item_focus_change();
+				this.reset();
 				break;
 			case this.mode == "lastfm_info":
 				//response needs checking before saving.
@@ -745,8 +743,7 @@ _.mixin({
 					return;
 				_.save(JSON.stringify(data), f, -1);
 				if (this.lastfm_mode == 0) {
-					this.artist = "";
-					panel.item_focus_change();
+					this.reset();
 				} else {
 					this.update();
 				}
