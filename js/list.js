@@ -720,8 +720,11 @@ _.mixin({
 			case this.mode == "lastfm_info":
 				//response needs checking before saving.
 				//we don't want to overwrite good cached data with nothing.
-				if (data.error)
-					return panel.console(data.message);
+				if (data.error) {
+					panel.console("HTTP error: " + this.xmlhttp.status);
+					panel.console(data.message);
+					return;
+				}
 				switch (this.lastfm_mode) {
 				case 0:
 					var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
