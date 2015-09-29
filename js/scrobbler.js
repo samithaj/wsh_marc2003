@@ -1,5 +1,5 @@
 _.mixin({
-	scrobbler : function (x, y) {
+	scrobbler : function (x, y, size) {
 		this.notify_data = function (name, data) {
 			if (name == "2K3.NOTIFY.LOVE")
 				this.post(_.tf("%LASTFM_LOVED_DB%", data) == 1 ? "track.unlove" : "track.love", data);
@@ -384,7 +384,7 @@ _.mixin({
 				var tooltip = "Last.fm Settings";
 				break;
 			}
-			buttons.buttons.scrobbler = new _.button(this.x, this.y, 36, 36, {normal : n}, _.bind(function () { this.menu(); }, this), tooltip);
+			buttons.buttons.scrobbler = new _.button(this.x, this.y, this.size, this.size, {normal : n}, _.bind(function () { this.menu(); }, this), tooltip);
 			window.RepaintRect(buttons.buttons.scrobbler.x, buttons.buttons.scrobbler.y, buttons.buttons.scrobbler.w, buttons.buttons.scrobbler.h);
 		}
 		
@@ -406,7 +406,7 @@ _.mixin({
 			m.AppendMenuItem(MF_STRING, 6, "Show loved tracks");
 			m.AppendMenuSeparator();
 			m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 7, "View profile");
-			var idx = m.TrackPopupMenu(this.x, 36);
+			var idx = m.TrackPopupMenu(this.x, this.size);
 			switch (idx) {
 			case 1:
 				lastfm.update_username();
@@ -454,6 +454,7 @@ _.mixin({
 		_.createFolder(folders.settings);
 		this.x = x;
 		this.y = y;
+		this.size = size;
 		this.loved_working = false;
 		this.playcount_working = false;
 		this.min_length = 30;
