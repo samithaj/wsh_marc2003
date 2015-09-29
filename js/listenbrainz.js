@@ -55,7 +55,7 @@ _.mixin({
 				payload : [{
 					listened_at : timestamp,
 					track_metadata : {
-						additional_info : tags,
+						additional_info : {tags: tags},
 						artist_name : tags.artist,
 						release_name : tags.album,
 						track_name : tags.title
