@@ -91,7 +91,7 @@ _.mixin({
 		}
 		
 		this.post = function (data) {
-			this.xmlhttp.open("POST", "http://api.listenbrainz.org/1/submit-listens", true);
+			this.xmlhttp.open("POST", "https://api.listenbrainz.org/1/submit-listens", true);
 			this.xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
 			this.xmlhttp.setRequestHeader("Authorization" , "Token " + this.token);
 			this.xmlhttp.send(JSON.stringify(data));
