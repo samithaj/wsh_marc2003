@@ -9,7 +9,7 @@
 // @import "%fb2k_profile_path%wsh_marc2003\js\thumbs.js"
 // ==/PREPROCESSOR==
 
-var panel = new _.panel("Thumbs", ["metadb", "custom_background"]);
+var panel = new _.panel("Thumbs", ["metadb", "custom_background", "remap"]);
 var thumbs = new _.thumbs();
 
 panel.item_focus_change();
