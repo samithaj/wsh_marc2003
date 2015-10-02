@@ -55,7 +55,7 @@ _.mixin({
 				payload : [{
 					listened_at : timestamp,
 					track_metadata : {
-						additional_info : {tags: tags},
+						additional_info : { tags : tags },
 						artist_name : tags.artist,
 						release_name : tags.album,
 						track_name : tags.title
@@ -123,7 +123,7 @@ _.mixin({
 				this.token = _.input("Enter your token\n\nhttp://listenbrainz.org/user/import", panel.name, this.token);
 				utils.WriteINI(this.ini_file, "Listenbrainz", "token", this.token);
 				this.update_button();
-				window.RepaintRect(buttons.buttons.listenbrainz.x, buttons.buttons.listenbrainz.y, buttons.buttons.listenbrainz.w, buttons.buttons.listenbrainz.h);
+				window.RepaintRect(this.x, this.y, this.size, this.size);
 				break;
 			case 2:
 				this.username = _.input("Enter your username.", panel.name, this.username);
