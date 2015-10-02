@@ -19,7 +19,7 @@ _.mixin({
 			if (!metadb)
 				return;
 			
-			if (this.library_tracks_only && !fb.IsMetadbInMediaLibrary(metadb))
+			if (this.library && !fb.IsMetadbInMediaLibrary(metadb))
 				return panel.console("Skipping... Track not in Media Library.");
 			
 			var timestamp = Math.floor(new Date().getTime() / 1000);
