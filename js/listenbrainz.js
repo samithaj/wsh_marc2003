@@ -142,7 +142,7 @@ _.mixin({
 				break;
 			case 6:
 				this.library = !this.library;
-				window.SetProperty("2K3.LISTENBRAINZ.LIBRARY", this.show_data);
+				window.SetProperty("2K3.LISTENBRAINZ.LIBRARY", this.library);
 				break;
 			}
 			m.Dispose();
