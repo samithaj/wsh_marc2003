@@ -55,7 +55,13 @@ _.mixin({
 				payload : [{
 					listened_at : timestamp,
 					track_metadata : {
-						additional_info : { tags : tags },
+						additional_info : {
+							artist_mbids : typeof tags.musicbrainz_artistid == "string" ? [tags.musicbrainz_artistid] : tags.musicbrainz_artistid,
+							recording_mbid : tags.musicbrainz_trackid,
+							release_mbid : tags.musicbrainz_albumid,
+							tags : tags,
+							track_number : tags.tracknumber
+						},
 						artist_name : tags.artist,
 						release_name : tags.album,
 						track_name : tags.title
