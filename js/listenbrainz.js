@@ -110,9 +110,9 @@ _.mixin({
 		}
 		
 		this.options = function () {
+			var flag = this.token.length == 36 ? MF_STRING : MF_GRAYED;
 			var m = window.CreatePopupMenu();
 			m.AppendMenuItem(MF_STRING, 1, "Set token...");
-			var flag = this.token.length == 36 ? MF_STRING : MF_GRAYED;
 			m.AppendMenuSeparator();
 			m.AppendMenuItem(MF_STRING, 2, "Set username...");
 			m.AppendMenuItem(this.username.length > 0 ? MF_STRING : MF_GRAYED, 3, "View profile");
@@ -123,13 +123,12 @@ _.mixin({
 			m.CheckMenuItem(5, this.log_data);
 			m.AppendMenuItem(flag, 6, "Submit library tracks only");
 			m.CheckMenuItem(6, this.library);
-			var idx = m.TrackPopupMenu(this.x, this.y);
+			var idx = m.TrackPopupMenu(this.x, this.y + this.size);
 			switch (idx) {
 			case 1:
 				this.token = _.input("Enter your token\n\nhttp://listenbrainz.org/user/import", panel.name, this.token);
 				utils.WriteINI(this.ini_file, "Listenbrainz", "token", this.token);
 				this.update_button();
-				window.RepaintRect(this.x, this.y, this.size, this.size);
 				break;
 			case 2:
 				this.username = _.input("Enter your username.", panel.name, this.username);
@@ -156,6 +155,7 @@ _.mixin({
 		
 		this.update_button = function () {
 			buttons.buttons.listenbrainz = new _.button(this.x, this.y, this.size, this.size, {normal : listenbrainz.token.length == 36 ? "misc\\listenbrainz_active.png" : "misc\\listenbrainz_inactive.png"}, _.bind(function () { this.options(); }, this), "Listenbrainz Options");
+			window.RepaintRect(this.x, this.y, this.size, this.size);
 		}
 		
 		this.folder = fb.ProfilePath + "listenbrainz\\";

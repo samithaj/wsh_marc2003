@@ -385,7 +385,7 @@ _.mixin({
 				break;
 			}
 			buttons.buttons.scrobbler = new _.button(this.x, this.y, this.size, this.size, {normal : n}, _.bind(function () { this.menu(); }, this), tooltip);
-			window.RepaintRect(buttons.buttons.scrobbler.x, buttons.buttons.scrobbler.y, buttons.buttons.scrobbler.w, buttons.buttons.scrobbler.h);
+			window.RepaintRect(this.x, this.y, this.size, this.size);
 		}
 		
 		this.menu = function () {
@@ -406,7 +406,7 @@ _.mixin({
 			m.AppendMenuItem(MF_STRING, 6, "Show loved tracks");
 			m.AppendMenuSeparator();
 			m.AppendMenuItem(lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 7, "View profile");
-			var idx = m.TrackPopupMenu(this.x, this.size);
+			var idx = m.TrackPopupMenu(this.x, this.y + this.size);
 			switch (idx) {
 			case 1:
 				lastfm.update_username();

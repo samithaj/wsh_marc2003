@@ -15,15 +15,11 @@
 
 var panel = new _.panel("Listenbrainz", ["custom_background"]);
 var buttons = new _.buttons();
-//x, y, size
 var listenbrainz = new _.listenbrainz(2, 2, 32);
+listenbrainz.update_button();
 
 function on_size() {
 	panel.size();
-	//listenbrainz.x and listenbrainz.y can be edited here if you
-	//want to change the button position eg
-	//listenbrainz.x = panel.w - listenbrainz.size;
-	listenbrainz.update_button();
 }
 
 function on_paint(gr) {
