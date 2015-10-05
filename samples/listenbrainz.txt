@@ -7,11 +7,8 @@
 // @import "%fb2k_profile_path%wsh_marc2003\js\listenbrainz.js"
 // ==/PREPROCESSOR==
 
-//this script logs all plays to a folder inside your foobar2000 profile folder
-//this feature is optional and can be turned off
-//%appdata%\foobar2000\listenbrainz
-//your token will be stored inside a plain text ini file
-//%appdata%\foobar2000\wsh_settings\listenbrainz.ini
+//before using this script, please read this:
+//https://github.com/19379/wsh_marc2003/wiki/Listenbrainz
 
 var panel = new _.panel("Listenbrainz", ["custom_background"]);
 var buttons = new _.buttons();
