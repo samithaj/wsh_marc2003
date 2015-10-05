@@ -24,11 +24,12 @@ _.mixin({
 			
 			var timestamp = Math.floor(new Date().getTime() / 1000);
 			
+			var exclusions = "log|cuesheet|lyrics|unsynced lyrics|" + this.exclusions;
 			var tags = {};
 			var f = metadb.GetFileInfo();
 			for (var i = 0; i < f.MetaCount; i++) {
 				var name = f.MetaName(i).toLowerCase();
-				if (this.exclusions.indexOf(name) > -1)
+				if (exclusions.indexOf(name) > -1)
 					continue;
 				
 				if (typeof(this.mb_names[name]) == "string")
@@ -123,6 +124,7 @@ _.mixin({
 			m.CheckMenuItem(5, this.log_data);
 			m.AppendMenuItem(flag, 6, "Submit library tracks only");
 			m.CheckMenuItem(6, this.library);
+			m.AppendMenuItem(flag, 7, "Exclusions...");
 			var idx = m.TrackPopupMenu(this.x, this.y + this.size);
 			switch (idx) {
 			case 1:
@@ -149,6 +151,10 @@ _.mixin({
 				this.library = !this.library;
 				window.SetProperty("2K3.LISTENBRAINZ.LIBRARY", this.library);
 				break;
+			case 7:
+				this.exclusions = _.input("Enter tags you do not wish to be submitted.\n\nSeparate each value with a |", panel.name, this.exclusions);
+				window.SetProperty("2K3.LISTENBRAINZ.EXCLUSIONS", this.exclusions);
+				break;
 			}
 			m.Dispose();
 		}
@@ -170,11 +176,11 @@ _.mixin({
 		this.show_data = window.GetProperty("2K3.LISTENBRAINZ.SHOW.DATA", false);
 		this.log_data = window.GetProperty("2K3.LISTENBRAINZ.LOG.DATA", true);
 		this.library = window.GetProperty("2K3.LISTENBRAINZ.LIBRARY", false);
+		this.exclusions = window.GetProperty("2K3.LISTENBRAINZ.EXCLUSIONS", "");
 		this.xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		this.time_elapsed = 0;
 		this.target_time = 0;
 		this.timestamp = 0;
-		this.exclusions = "log|cuesheet|lyrics|unsynced lyrics";
 		this.mb_names = {
 			"acoustid id" : "acoustid_id",
 			"acoustid fingerprint" : "acoustid_fingerprint",
