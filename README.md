@@ -12,4 +12,4 @@ I've added a few [screenshots](https://github.com/19379/wsh_marc2003/wiki/Screen
 
 [Changes from previous versions](https://github.com/19379/wsh_marc2003/wiki/Changes-from-previous-versions)
 
-v9.5 05-10-2015
+v9.6 07-10-2015
