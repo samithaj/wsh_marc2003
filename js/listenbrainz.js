@@ -24,12 +24,11 @@ _.mixin({
 			
 			var timestamp = Math.floor(new Date().getTime() / 1000);
 			
-			var exclusions = "log|cuesheet|lyrics|unsynced lyrics|" + this.exclusions;
 			var tags = {};
 			var f = metadb.GetFileInfo();
 			for (var i = 0; i < f.MetaCount; i++) {
 				var name = f.MetaName(i).toLowerCase();
-				if (exclusions.indexOf(name) > -1)
+				if (!this.submit_genres && name == "genre")
 					continue;
 				
 				if (typeof(this.mb_names[name]) == "string")
@@ -58,10 +57,16 @@ _.mixin({
 					track_metadata : {
 						additional_info : {
 							artist_mbids : typeof tags.musicbrainz_artistid == "string" ? [tags.musicbrainz_artistid] : tags.musicbrainz_artistid,
+							date : tags.date,
+							discnumber : tags.discnumber,
 							recording_mbid : tags.musicbrainz_trackid,
+							release_group_mbid : tags.musicbrainz_releasegroupid,
 							release_mbid : tags.musicbrainz_albumid,
-							tags : tags,
-							track_number : tags.tracknumber
+							tags : typeof tags.genre == "string" ? [tags.genre] : tags.genre,
+							totaltracks: tags.totaltracks,
+							track_mbid : tags.musicbrainz_releasetrackid,
+							tracknumber : tags.tracknumber,
+							work_mbids : typeof tags.musicbrainz_workid == "string" ? [tags.musicbrainz_workid] : tags.musicbrainz_workid
 						},
 						artist_name : tags.artist,
 						release_name : tags.album,
@@ -124,7 +129,8 @@ _.mixin({
 			m.CheckMenuItem(5, this.log_data);
 			m.AppendMenuItem(flag, 6, "Submit library tracks only");
 			m.CheckMenuItem(6, this.library);
-			m.AppendMenuItem(flag, 7, "Exclusions...");
+			m.AppendMenuItem(flag, 7, "Submit genre tags");
+			m.CheckMenuItem(7, this.submit_genres);
 			var idx = m.TrackPopupMenu(this.x, this.y + this.size);
 			switch (idx) {
 			case 1:
@@ -152,8 +158,8 @@ _.mixin({
 				window.SetProperty("2K3.LISTENBRAINZ.LIBRARY", this.library);
 				break;
 			case 7:
-				this.exclusions = _.input("Enter tags you do not wish to be submitted.\n\nSeparate each value with a |", panel.name, this.exclusions);
-				window.SetProperty("2K3.LISTENBRAINZ.EXCLUSIONS", this.exclusions);
+				this.submit_genres = !this.submit_genres; 
+				window.SetProperty("2K3.LISTENBRAINZ.SUBMIT.GENRES", this.submit_genres);
 				break;
 			}
 			m.Dispose();
@@ -176,7 +182,7 @@ _.mixin({
 		this.show_data = window.GetProperty("2K3.LISTENBRAINZ.SHOW.DATA", false);
 		this.log_data = window.GetProperty("2K3.LISTENBRAINZ.LOG.DATA", true);
 		this.library = window.GetProperty("2K3.LISTENBRAINZ.LIBRARY", false);
-		this.exclusions = window.GetProperty("2K3.LISTENBRAINZ.EXCLUSIONS", "");
+		this.submit_genres = window.GetProperty("2K3.LISTENBRAINZ.SUBMIT.GENRES", true);
 		this.xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		this.time_elapsed = 0;
 		this.target_time = 0;
