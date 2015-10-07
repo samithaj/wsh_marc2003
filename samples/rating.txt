@@ -38,3 +38,7 @@ function on_mouse_leave() {
 function on_mouse_lbtn_up(x, y) {
 	rating.lbtn_up(x, y);
 }
+
+function on_mouse_rbtn_up(x, y) {
+	return panel.rbtn_up(x, y);
+}

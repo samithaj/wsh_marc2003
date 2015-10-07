@@ -46,3 +46,7 @@ function on_mouse_lbtn_up(x, y) {
 	if (list.in_range)
 		_.browser(list.data[_.floor((x - list.x) / 20)].url);
 }
+
+function on_mouse_rbtn_up(x, y) {
+	return panel.rbtn_up(x, y);
+}
