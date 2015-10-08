@@ -63,6 +63,7 @@ _.mixin({
 							release_group_mbid : tags.musicbrainz_releasegroupid,
 							release_mbid : tags.musicbrainz_albumid,
 							tags : typeof tags.genre == "string" ? [tags.genre] : tags.genre,
+							totaldiscs : tags.totaldiscs,
 							totaltracks: tags.totaltracks,
 							track_mbid : tags.musicbrainz_releasetrackid,
 							tracknumber : tags.tracknumber,
