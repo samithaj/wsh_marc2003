@@ -27,7 +27,7 @@ _.mixin({
 				this.tooltip = "";
 				this.path = "";
 				this.img = utils.GetAlbumArtV2(panel.metadb, this.id);
-				window.RepaintRect(this.x, this.y, this.w, this.h);
+				window.Repaint();
 				utils.GetAlbumArtAsync(window.ID, panel.metadb, this.id, true, false, true);
 			}
 		}
