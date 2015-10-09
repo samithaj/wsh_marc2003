@@ -238,8 +238,8 @@ _.mixin({
 				break;
 			case x > this.x + this.text_x && x < this.x + this.text_x + Math.min(this.data[this.index].width, this.text_width):
 				if (this.mode == "properties") {
-					fb.CreateAutoPlaylist(fb.PlaylistCount, this.data[this.index].name, this.data[this.index].query);
-					fb.ActivePlaylist = fb.PlaylistCount - 1;
+					fb.CreateAutoPlaylist(plman.PlaylistCount, this.data[this.index].name, this.data[this.index].query);
+					plman.ActivePlaylist = plman.PlaylistCount - 1;
 				} else {
 					_.browser(this.data[this.index].url);
 				}
@@ -879,14 +879,14 @@ _.mixin({
 				
 				this.run_query = function (n, q, s, f) {
 					var i = 0;
-					while (i < fb.PlaylistCount) {
-						if (fb.GetPlaylistName(i) == n)
-							fb.RemovePlaylist(i);
+					while (i < plman.PlaylistCount) {
+						if (plman.GetPlaylistName(i) == n)
+							plman.RemovePlaylist(i);
 						else
 							i++;
 					}
-					fb.CreateAutoPlaylist(fb.PlaylistCount, n, q, s, f);
-					fb.ActivePlaylist = fb.PlaylistCount - 1;
+					fb.CreateAutoPlaylist(plman.PlaylistCount, n, q, s, f);
+					plman.ActivePlaylist = plman.PlaylistCount - 1;
 				}
 				
 				_.createFolder(folders.settings);
