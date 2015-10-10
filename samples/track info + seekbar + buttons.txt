@@ -76,7 +76,12 @@ function on_playback_starting() {
 }
 
 function on_mouse_wheel(s) {
-	seekbar.wheel(s);
+	if (seekbar.wheel(s))
+		return;
+	if (s == 1)
+		fb.VolumeUp();
+	else
+		fb.VolumeDown();
 }
 
 function on_mouse_move(x, y) {
