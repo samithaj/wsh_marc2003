@@ -96,7 +96,9 @@ function on_mouse_lbtn_down(x, y) {
 function on_mouse_lbtn_up(x, y) {
 	if (buttons.lbtn_up(x, y))
 		return;
-	seekbar.lbtn_up(x, y);
+	if (seekbar.lbtn_up(x, y))
+		return;
+	fb.RunMainMenuCommand("View/Show now playing in playlist");
 }
 
 function on_mouse_rbtn_up(x, y) {
