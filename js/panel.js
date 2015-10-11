@@ -30,14 +30,7 @@ _.mixin({
 	panel : function (name, features) {
 		this.item_focus_change = function () {
 			if (this.metadb_func) {
-				switch (this.selection) {
-				case 0:
-					this.metadb = fb.IsPlaying ? fb.GetNowPlaying() : fb.GetFocusItem();
-					break;
-				case 1:
-					this.metadb = fb.GetFocusItem();
-					break;
-				}
+				this.metadb = this.selection == 0 && fb.IsPlaying ? fb.GetNowPlaying() : fb.GetFocusItem();
 				if (this.metadb)
 					on_metadb_changed();
 				else
