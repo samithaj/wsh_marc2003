@@ -168,7 +168,7 @@ _.mixin({
 				var data = _.jsonParse(this.xmlhttp.responsetext);
 				if (data.error)
 					panel.console(data.message);
-				else if (_.get(data, "nowplaying.ignoredMesage.code") == 0) //yes, it really is that bad
+				else if (_.get(data, "nowplaying.ignoredMessage.code") == 0)
 					panel.console("Now playing notification updated ok.");
 				break;
 			case "track.getInfo":
