@@ -24,28 +24,7 @@ _.mixin({
 			
 			var timestamp = Math.floor(new Date().getTime() / 1000);
 			
-			var tags = {};
-			var f = metadb.GetFileInfo();
-			for (var i = 0; i < f.MetaCount; i++) {
-				var name = f.MetaName(i).toLowerCase();
-				if (!this.submit_genres && name == "genre")
-					continue;
-				
-				if (typeof(this.mb_names[name]) == "string")
-					var key = this.mb_names[name];
-				else
-					var key = name;
-				
-				var num = _.tf("$meta_num(" + name + ")", metadb);
-				if (num == 1) {
-					tags[key] = _.tf("$meta(" + name + ")", metadb);
-				} else {
-					tags[key] = [];
-					for (var j = 0; j < num; j++) {
-						tags[key].push(_.tf("$meta(" + name + "," + j + ")", metadb));
-					}
-				}
-			}
+			var tags = this.get_tags(metadb);
 			
 			if (!tags.artist || !tags.title)
 				return panel.console("Artist/title tag missing. Not submitting.");
@@ -114,6 +93,32 @@ _.mixin({
 					this.xmlhttp.responsetext && panel.console(this.xmlhttp.responsetext);
 				}
 			}, this);
+		}
+		
+		this.get_tags = function (metadb) {
+			var tmp = {};
+			var f = metadb.GetFileInfo();
+			for (var i = 0; i < f.MetaCount; i++) {
+				var name = f.MetaName(i).toLowerCase();
+				if (!this.submit_genres && name == "genre")
+					continue;
+				
+				if (typeof(this.mb_names[name]) == "string")
+					var key = this.mb_names[name];
+				else
+					var key = name;
+				
+				var num = _.tf("$meta_num(" + name + ")", metadb);
+				if (num == 1) {
+					tmp[key] = _.tf("$meta(" + name + ")", metadb);
+				} else {
+					tmp[key] = [];
+					for (var j = 0; j < num; j++) {
+						tmp[key].push(_.tf("$meta(" + name + "," + j + ")", metadb));
+					}
+				}
+			}
+			return tmp;
 		}
 		
 		this.options = function () {
