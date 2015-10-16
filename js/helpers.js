@@ -119,10 +119,10 @@ _.mixin({
 		}
 	},
 	isFile : function (file) {
-		return fso.FileExists(file);
+		return typeof file == "string" ? fso.FileExists(file) : false;
 	},
 	isFolder : function (folder) {
-		return fso.FolderExists(folder);
+		return typeof folder == "string" ? fso.FolderExists(folder) : false;
 	},
 	createFolder : function (folder) {
 		if (!_.isFolder(folder))
