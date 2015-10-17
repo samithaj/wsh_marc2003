@@ -2,7 +2,7 @@ _.mixin({
 	listenbrainz : function (x, y, size) {
 		this.playback_new_track = function() {
 			this.time_elapsed = 0;
-			this.target_time = Math.min(Math.ceil(fb.PlaybackLength / 2), 240);
+			this.target_time = Math.min(_.ceil(fb.PlaybackLength / 2), 240);
 		}
 		
 		this.playback_time = function () {
@@ -22,7 +22,7 @@ _.mixin({
 			if (this.library && !fb.IsMetadbInMediaLibrary(metadb))
 				return panel.console("Skipping... Track not in Media Library.");
 			
-			var timestamp = Math.floor(_.now() / 1000);
+			var timestamp = _.floor(_.now() / 1000);
 			
 			var tags = this.get_tags(metadb);
 			
