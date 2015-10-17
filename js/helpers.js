@@ -354,9 +354,7 @@ _.mixin({
 				fb.trace("JSON.parse error: " + value);
 			return [];
 		}
-		if (path)
-			data = _.get(data, path, []);
-		return data;
+		return path ? _.get(data, path, []) : data;
 	},
 	gdiFont : function (name, size, style) {
 		return gdi.Font(name, size * 96 / 72, style);
@@ -414,9 +412,7 @@ _.mixin({
 		title = title.replace(/"/g, '" + Chr(34) + "');
 		value = value.replace(/"/g, '" + Chr(34) + "');
 		var temp_value = vb.eval('InputBox' + '("' + prompt + '", "' + title + '", "' + value + '")');
-		if (_.isUndefined(temp_value))
-			return original;
-		return _.trim(temp_value);
+		return _.isUndefined(temp_value) ? original : _.trim(temp_value);
 	},
 	tt : function (value) {
 		if (tooltip.Text != value) {
