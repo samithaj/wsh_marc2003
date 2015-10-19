@@ -30,7 +30,7 @@ _.mixin({
 						gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.title, panel.colours.highlight, this.x, this.y + 15 + (i * panel.row_height), this.text_width, panel.row_height, LEFT);
 						gr.GdiDrawText(this.data[i + this.offset].date, panel.fonts.title, panel.colours.highlight, this.x, this.y + 15 + (i * panel.row_height), this.w, panel.row_height, RIGHT);
 					} else {
-						gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.normal, panel.colours.highlight, this.x, this.y + 15 + (i * panel.row_height), this.w, panel.row_height, LEFT);
+						gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.normal, panel.colours.text, this.x, this.y + 15 + (i * panel.row_height), this.w, panel.row_height, LEFT);
 					}
 				}
 				break;
