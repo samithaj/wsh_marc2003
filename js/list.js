@@ -200,7 +200,33 @@ _.mixin({
 				break;
 			case x > this.x + this.text_x && x < this.x + this.text_x + Math.min(this.data[this.index].width, this.text_width):
 				window.SetCursor(IDC_HAND);
-				_.tt(this.mode == "properties" ? "Autoplaylist: " + this.data[this.index].query : this.data[this.index].url);
+				if (this.mode == "properties") {
+					switch (this.data[this.index].name) {
+					case "MUSICBRAINZ_RELEASEGROUPID":
+					case "MUSICBRAINZ RELEASE GROUP ID":
+						_.tt("https://musicbrainz.org/release-group/" + this.data[this.index].value);
+						break;
+					case "MUSICBRAINZ_ARTISTID":
+					case "MUSICBRAINZ_ALBUMARTISTID":
+					case "MUSICBRAINZ ARTIST ID":
+					case "MUSICBRAINZ ALBUM ARTIST ID":
+						_.tt("https://musicbrainz.org/artist/" + this.data[this.index].value);
+						break;
+					case "MUSICBRAINZ_ALBUMID":
+					case "MUSICBRAINZ ALBUM ID":
+						_.tt("https://musicbrainz.org/release/" + this.data[this.index].value);
+						break;
+					case "MUSICBRAINZ_TRACKID":
+					case "MUSICBRAINZ TRACK ID":
+						_.tt("https://musicbrainz.org/recording/" + this.data[this.index].value);
+						break;
+					default:
+						_.tt("Autoplaylist: " + this.data[this.index].query);
+						break;
+					}
+				} else {
+					_.tt(this.data[this.index].url);
+				}
 				break;
 			default:
 				window.SetCursor(IDC_ARROW);
@@ -238,8 +264,30 @@ _.mixin({
 				break;
 			case x > this.x + this.text_x && x < this.x + this.text_x + Math.min(this.data[this.index].width, this.text_width):
 				if (this.mode == "properties") {
-					fb.CreateAutoPlaylist(plman.PlaylistCount, this.data[this.index].name, this.data[this.index].query);
-					plman.ActivePlaylist = plman.PlaylistCount - 1;
+					switch (this.data[this.index].name) {
+					case "MUSICBRAINZ_RELEASEGROUPID":
+					case "MUSICBRAINZ RELEASE GROUP ID":
+						_.browser("https://musicbrainz.org/release-group/" + this.data[this.index].value);
+						break;
+					case "MUSICBRAINZ_ARTISTID":
+					case "MUSICBRAINZ_ALBUMARTISTID":
+					case "MUSICBRAINZ ARTIST ID":
+					case "MUSICBRAINZ ALBUM ARTIST ID":
+						_.browser("https://musicbrainz.org/artist/" + this.data[this.index].value);
+						break;
+					case "MUSICBRAINZ_ALBUMID":
+					case "MUSICBRAINZ ALBUM ID":
+						_.browser("https://musicbrainz.org/release/" + this.data[this.index].value);
+						break;
+					case "MUSICBRAINZ_TRACKID":
+					case "MUSICBRAINZ TRACK ID":
+						_.browser("https://musicbrainz.org/recording/" + this.data[this.index].value);
+						break;
+					default:
+						fb.CreateAutoPlaylist(plman.PlaylistCount, this.data[this.index].name, this.data[this.index].query);
+						plman.ActivePlaylist = plman.PlaylistCount - 1;
+						break;
+					}
 				} else {
 					_.browser(this.data[this.index].url);
 				}
