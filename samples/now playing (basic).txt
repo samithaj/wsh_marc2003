@@ -46,7 +46,7 @@ panel.item_focus_change();
 function on_size() {
 	panel.size();
 	thumbs.size();
-	text.y = Math.round(panel.h * 0.75);
+	text.y = _.floor(panel.h * 0.75);
 	text.w = panel.w - 40
 	text.h = panel.h - text.y - 5;
 	text.size();
