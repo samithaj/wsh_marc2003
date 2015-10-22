@@ -1,5 +1,13 @@
 _.mixin({
 	text : function (mode, x, y, w, h) {
+		this.console_print = function (msg) {
+			if (this.content.length > 0)
+				this.content += "\n";
+			this.content += msg;
+			if (!this.timer)
+				this.timer = window.SetTimeout(this.timeout_func, 500);
+		}
+		
 		this.size = function () {
 			this.rows = _.floor((this.h - 30) / panel.row_height);
 			this.up_btn.x = this.x + _.round((this.w - 15) / 2);
@@ -40,6 +48,8 @@ _.mixin({
 						this.get();
 					}
 					break;
+				case "console":
+					return;
 				case "lastfm_bio":
 					var temp_artist = panel.tf(panel.artist_tf);
 					if (this.artist == temp_artist)
@@ -159,8 +169,10 @@ _.mixin({
 				panel.m.AppendMenuSeparator();
 				break;
 			}
-			panel.m.AppendMenuItem(_.isFile(this.filename) ? MF_STRING : MF_GRAYED, 5999, "Open containing folder");
-			panel.m.AppendMenuSeparator();
+			if (this.mode != "console") {
+				panel.m.AppendMenuItem(_.isFile(this.filename) ? MF_STRING : MF_GRAYED, 5999, "Open containing folder");
+				panel.m.AppendMenuSeparator();
+			}
 		}
 		
 		this.rbtn_up_done = function (idx) {
@@ -251,6 +263,13 @@ _.mixin({
 				break;
 			case this.fixed:
 				this.lines = this.content.split("\n");
+				break;
+			case this.mode == "console":
+				var temp = this.content.split("\n");
+				if (temp.length > this.max)
+					this.content = _.drop(temp, temp.length - this.max).join("\n");
+				this.lines = _.lineWrap(this.content, panel.fonts.normal, this.w);
+				this.offset = this.lines.length > this.rows ? this.lines.length - this.rows : 0;
 				break;
 			default:
 				this.lines = _.lineWrap(this.content, panel.fonts.normal, this.w);
@@ -350,13 +369,12 @@ _.mixin({
 			switch (this.mode) {
 			case "allmusic":
 				return panel.tf("%album artist%[ - %album%]");
-				break;
+			case "console":
+				return "Console";
 			case "lastfm_bio":
 				return this.artist;
-				break;
 			case "text_reader":
 				return panel.tf(this.title_tf);
-				break;
 			}
 		}
 		
@@ -371,6 +389,16 @@ _.mixin({
 				_.createFolder(folders.artists);
 				this.allmusic_artist_tf = window.GetProperty("2K3.TEXT.ALLMUSIC.ARTIST.TF", "%album artist%");
 				this.allmusic_album_tf = window.GetProperty("2K3.TEXT.ALLMUSIC.ALBUM.TF", "%album%");
+				break;
+			case "console":
+				this.timeout_func = _.bind(function () {
+					this.timer = false;
+					this.update();
+					window.Repaint();
+				}, this);
+				
+				this.timer = false;
+				this.max = 300;
 				break;
 			case "lastfm_bio":
 				_.createFolder(folders.data);
