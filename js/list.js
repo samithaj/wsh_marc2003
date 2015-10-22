@@ -341,7 +341,7 @@ _.mixin({
 					panel.m.CheckMenuRadioItem(3120, 3122, this.lastfm_charts_method + 3120);
 					panel.m.AppendMenuSeparator();
 					_.forEach(this.lastfm_charts_periods, function (item, i) {
-						panel.m.AppendMenuItem(i == 1 ? MF_GRAYED : MF_STRING, i + 3130, _.capitalize(item.display));
+						panel.m.AppendMenuItem(MF_STRING, i + 3130, _.capitalize(item.display));
 					});
 					panel.m.CheckMenuRadioItem(3130, 3135, this.lastfm_charts_period + 3130);
 					panel.m.AppendMenuSeparator();
@@ -1014,9 +1014,6 @@ _.mixin({
 						display : "12 month"
 					}
 				];
-				//hack to avoid 7day charts while last.fm API is still broken
-				if (window.GetProperty("2K3.LIST.LASTFM.CHARTS.PERIOD") == 1)
-					window.SetProperty("2K3.LIST.LASTFM.CHARTS.PERIOD", 0);
 				this.lastfm_charts_period = window.GetProperty("2K3.LIST.LASTFM.CHARTS.PERIOD", 0);
 				this.lastfm_charts_colour = window.GetProperty("2K3.LIST.LASTFM.CHARTS.COLOUR", "60-60-60");
 				if (this.lastfm_mode > 0)
