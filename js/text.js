@@ -269,7 +269,8 @@ _.mixin({
 				if (temp.length > this.max)
 					this.content = _.drop(temp, temp.length - this.max).join("\n");
 				this.lines = _.lineWrap(this.content, panel.fonts.normal, this.w);
-				this.offset = this.lines.length > this.rows ? this.lines.length - this.rows : 0;
+				if (this.lines.length > this.rows)
+					this.offset = this.lines.length - this.rows;
 				break;
 			default:
 				this.lines = _.lineWrap(this.content, panel.fonts.normal, this.w);
