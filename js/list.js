@@ -723,11 +723,8 @@ _.mixin({
 				this.reset();
 				break;
 			case this.mode == "lastfm_info":
-				if (data.error) {
-					panel.console("HTTP error: " + this.xmlhttp.status);
-					panel.console(data.message);
-					return;
-				}
+				if (data.error)
+					return panel.console(data.message);
 				if (this.lastfm_mode == 0) {
 					var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
 					if (_.isUndefined(temp.length))
