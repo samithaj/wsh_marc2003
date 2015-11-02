@@ -53,10 +53,7 @@ _.mixin({
 					this.text_x = 0;
 					this.text_width = this.w;
 					for (var i = 0; i < Math.min(this.items, this.rows); i++) {
-						if (this.lastfm_mode == 2 && this.data[i + this.offset].width > 0)
-							gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.title, panel.colours.text, this.x, this.y + 15 + (i * panel.row_height), this.text_width, panel.row_height, LEFT);
-						else
-							gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.normal, panel.colours.text, this.x, this.y + 15 + (i * panel.row_height), this.text_width, panel.row_height, LEFT);
+						gr.GdiDrawText(this.data[i + this.offset].name, panel.fonts.normal, panel.colours.text, this.x, this.y + 15 + (i * panel.row_height), this.text_width, panel.row_height, LEFT);
 					}
 				}
 				break;
@@ -131,7 +128,7 @@ _.mixin({
 		}
 		
 		this.playback_time = function () {
-			if (this.lastfm_mode != 3)
+			if (this.lastfm_mode != 2)
 				return;
 			this.time_elapsed++;
 			if (this.time_elapsed == 3)
@@ -322,9 +319,8 @@ _.mixin({
 			case "lastfm_info":
 				panel.m.AppendMenuItem(MF_STRING, 3100, "Artist Info");
 				panel.m.AppendMenuItem(MF_STRING, 3101, "User Charts");
-				panel.m.AppendMenuItem(MF_STRING, 3102, "User Recommendations");
-				panel.m.AppendMenuItem(MF_STRING, 3103, "User Recent Tracks");
-				panel.m.CheckMenuRadioItem(3100, 3103, this.lastfm_mode + 3100);
+				panel.m.AppendMenuItem(MF_STRING, 3102, "User Recent Tracks");
+				panel.m.CheckMenuRadioItem(3100, 3102, this.lastfm_mode + 3100);
 				panel.m.AppendMenuSeparator();
 				switch (this.lastfm_mode) {
 				case 0:
@@ -350,7 +346,6 @@ _.mixin({
 					break;
 				}
 				panel.m.AppendMenuItem(lastfm.api_key.length == 32 ? MF_STRING : MF_GRAYED, 3150, "Last.fm username...");
-				panel.m.AppendMenuItem(lastfm.api_key.length == 32 && lastfm.secret.length == 32 && lastfm.username.length > 0 ? MF_STRING : MF_GRAYED, 3151, "Last.fm password...");
 				panel.m.AppendMenuSeparator();
 				break;
 			case "musicbrainz":
@@ -400,7 +395,6 @@ _.mixin({
 			case 3100:
 			case 3101:
 			case 3102:
-			case 3103:
 				this.lastfm_mode = idx - 3100;
 				window.SetProperty("2K3.LIST.LASTFM.MODE", this.lastfm_mode);
 				if (this.lastfm_mode == 0) {
@@ -566,28 +560,6 @@ _.mixin({
 					}
 					break;
 				case 2:
-					if (lastfm.ok()) {
-						this.filename = folders.lastfm + lastfm.username + ".user.getRecommendedArtists.json";
-						if (_.isFile(this.filename)) {
-							var data = _.jsonParse(_.open(this.filename), "recommendations.artist");
-							if (_.isUndefined(data.length))
-								data = [data];
-							_.forEach(data, function (item) {
-								if (_.isUndefined(item.context.artist.length))
-									item.context.artist = [item.context.artist];
-								this.data.push({name : item.name, width : _.textWidth(item.name, panel.fonts.title), url : item.url});
-								this.data.push({name : "Similar to: " + _.map(item.context.artist, "name").join(", "), width : 0, url : ""});
-								this.data.push({name : "", width : 0, url : ""});
-							}, this);
-							this.items = this.data.length;
-							if (_.fileExpired(this.filename, ONE_DAY))
-								this.post();
-						} else {
-							this.post();
-						}
-					}
-					break;
-				case 3:
 					if (lastfm.username.length == 0) {
 						panel.console("Last.fm Username not set.");
 						break;
@@ -680,19 +652,6 @@ _.mixin({
 			window.Repaint();
 		}
 		
-		this.post = function () {
-			var api_sig = md5("api_key" + lastfm.api_key + "limit250methoduser.getRecommendedArtistssk" + lastfm.sk + lastfm.secret);
-			var post_data = "format=json&limit=250&sk=" + "&method=user.getRecommendedArtists&api_key=" + lastfm.api_key + "&api_sig=" + api_sig;
-			this.xmlhttp.open("POST", "https://ws.audioscrobbler.com/2.0/", true);
-			this.xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			this.xmlhttp.setRequestHeader("User-Agent", this.ua);
-			this.xmlhttp.send(post_data);
-			this.xmlhttp.onreadystatechange = _.bind(function () {
-				if (this.xmlhttp.readyState == 4)
-					this.success(this.filename);
-			}, this);
-		}
-		
 		this.get = function () {
 			var f = this.filename;
 			switch (this.mode) {
@@ -711,7 +670,7 @@ _.mixin({
 				case 1:
 					var url = lastfm.get_base_url() + "&limit=100&method=" + this.lastfm_charts_methods[this.lastfm_charts_method].method + "&period=" + this.lastfm_charts_periods[this.lastfm_charts_period].period + "&user=" + lastfm.username;
 					break;
-				case 3:
+				case 2:
 					var url = lastfm.get_base_url() + "&method=user.getRecentTracks&username=" + lastfm.username + "&s=" + _.now();
 					break;
 				}
@@ -764,35 +723,21 @@ _.mixin({
 				this.reset();
 				break;
 			case this.mode == "lastfm_info":
-				//response needs checking before saving.
-				//we don't want to overwrite good cached data with nothing.
 				if (data.error) {
 					panel.console("HTTP error: " + this.xmlhttp.status);
 					panel.console(data.message);
 					return;
 				}
-				switch (this.lastfm_mode) {
-				case 0:
-					var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
-					break;
-				case 1:
-					var temp = _.get(data, this.lastfm_charts_methods[this.lastfm_charts_method].json, []);
-					break;
-				case 2:
-					var temp = _.get(data, "recommendations.artist", []);
-					break;
-				case 3:
-					var temp = _.get(data, "recenttracks.track", []);
-					break;
-				}
-				if (_.isUndefined(temp.length))
-					temp = [temp];
-				if (temp.length == 0)
-					return;
-				_.save(JSON.stringify(data), f, -1);
 				if (this.lastfm_mode == 0) {
+					var temp = _.get(data, this.lastfm_artist_methods[this.lastfm_artist_method].json, []);
+					if (_.isUndefined(temp.length))
+						temp = [temp];
+					if (temp.length == 0)
+						return;
+					_.save(JSON.stringify(data), f, -1);
 					this.reset();
 				} else {
+					_.save(JSON.stringify(data), f, -1);
 					this.update();
 				}
 				break;
@@ -812,8 +757,6 @@ _.mixin({
 				case 1:
 					return lastfm.username + ": " + this.lastfm_charts_periods[this.lastfm_charts_period].display + " " + this.lastfm_charts_methods[this.lastfm_charts_method].display + " charts";
 				case 2:
-					return lastfm.username + ": recommended artists";
-				case 3:
 					return lastfm.username + ": recent tracks";
 				}
 			case "musicbrainz":
