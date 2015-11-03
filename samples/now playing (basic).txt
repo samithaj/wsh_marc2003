@@ -33,16 +33,16 @@ var line3 = {
 	y: 55
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
+
 var panel = new _.panel("np_basic", ["metadb", "remap", "custom_background"]);
 var text = new _.text("lastfm_bio", 20, 0, 0, 0);
 var thumbs = new _.thumbs();
 thumbs.mode = 5;
 
 var bar_h = 80;
- 
+
 panel.item_focus_change();
- 
+
 function on_size() {
 	panel.size();
 	thumbs.size();
@@ -51,7 +51,7 @@ function on_size() {
 	text.h = panel.h - text.y - 5;
 	text.size();
 }
- 
+
 function on_paint(gr) {
 	panel.colours.text = _.RGB(220, 220, 220);
 	panel.paint(gr);
@@ -63,7 +63,7 @@ function on_paint(gr) {
 	gr.FillSolidRect(text.x - 15, text.y, text.w + 30, text.h, _.RGBA(0, 0, 0, 156));
 	text.paint(gr);
 }
- 
+
 function on_metadb_changed() {
 	thumbs.metadb_changed();
 	text.metadb_changed();
@@ -80,15 +80,15 @@ function on_mouse_wheel(step) {
 		return;
 	thumbs.wheel(step);
 }
- 
+
 function on_mouse_move(x, y) {
 	text.move(x, y);
 }
- 
+
 function on_mouse_lbtn_up(x, y) {
 	text.lbtn_up(x, y);
 }
- 
+
 function on_mouse_lbtn_dblclk(x, y) {
 	thumbs.lbtn_dblclk(x, y);
 }

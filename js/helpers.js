@@ -45,7 +45,7 @@ vb.Language = "VBScript";
 //check if v1.6.1 or later
 if ("GetQueryItems" in plman)
 	var tooltip = window.CreateTooltip(window.GetProperty("2K3.TOOLTIP.FONT.NAME", "Segoe UI"), window.GetProperty("2K3.TOOLTIP.FONT.SIZE", 12), window.GetProperty("2K3.TOOLTIP.FONT.STYLE", 0));
-else 
+else
 	var tooltip = window.CreateTooltip();
 tooltip.SetMaxWidth(800);
 

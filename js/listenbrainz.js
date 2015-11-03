@@ -170,7 +170,7 @@ _.mixin({
 				window.SetProperty("2K3.LISTENBRAINZ.LIBRARY", this.library);
 				break;
 			case 7:
-				this.submit_genres = !this.submit_genres; 
+				this.submit_genres = !this.submit_genres;
 				window.SetProperty("2K3.LISTENBRAINZ.SUBMIT.GENRES", this.submit_genres);
 				break;
 			}
