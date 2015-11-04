@@ -1,9 +1,11 @@
 function on_colors_changed() {
 	panel.colours_changed();
+	window.Repaint();
 }
 
 function on_font_changed() {
 	panel.font_changed();
+	window.Repaint();
 }
 
 function on_playlist_switch() {
@@ -49,7 +51,6 @@ _.mixin({
 				this.colours.highlight = _.blendColours(this.colours.text, this.colours.background, 0.4);
 			}
 			this.colours.header = this.colours.highlight & 0x45FFFFFF;
-			window.Repaint();
 		}
 		
 		this.font_changed = function () {
@@ -153,7 +154,7 @@ _.mixin({
 			case idx == 16:
 				this.fonts.size = idx;
 				window.SetProperty("2K3.PANEL.FONTS.SIZE", this.fonts.size);
-				this.font_changed();
+				on_font_changed();
 				break;
 			case idx == 100:
 			case idx == 101:

@@ -633,6 +633,7 @@ _.mixin({
 				}
 				break;
 			case "properties":
+				this.text_x = 0;
 				this.filename = panel.metadb.Path;
 				var fileinfo = panel.metadb.GetFileInfo();
 				this.add_meta(fileinfo);
