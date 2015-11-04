@@ -71,7 +71,6 @@ _.mixin({
 			_.forEach(this.text_objects, function (item) {
 				item.size();
 			});
-			window.Repaint();
 		}
 		
 		this.size = function () {
