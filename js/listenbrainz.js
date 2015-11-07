@@ -108,13 +108,13 @@ _.mixin({
 				else
 					var key = name;
 				
-				var num = _.tf("$meta_num(" + name + ")", metadb);
+				var num = f.MetaValueCount(i);
 				if (num == 1) {
-					tmp[key] = _.tf("$meta(" + name + ")", metadb);
+					tmp[key] = f.MetaValue(i, 0);
 				} else {
 					tmp[key] = [];
 					for (var j = 0; j < num; j++) {
-						tmp[key].push(_.tf("$meta(" + name + "," + j + ")", metadb));
+						tmp[key].push(f.MetaValue(i, j));
 					}
 				}
 			}

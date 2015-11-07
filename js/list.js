@@ -1021,9 +1021,9 @@ _.mixin({
 				this.add_meta = function (f) {
 					for (var i = 0; i < f.MetaCount; i++) {
 						var name = f.MetaName(i);
-						var num = panel.tf("$meta_num(" + name + ")");
+						var num = f.MetaValueCount(i);
 						for (var j = 0; j < num; j++) {
-							var value = panel.tf("$meta(" + name + "," + j +")").replace(/\s{2,}/g, " ");
+							var value = f.MetaValue(i, j).replace(/\s{2,}/g, " ");
 							this.data.push({
 								name : num == 1 || j == 0 ? name.toUpperCase() : "",
 								value : value,
